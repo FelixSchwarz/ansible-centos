@@ -12,6 +12,8 @@
 
 - include: userdb.yml
 
+- include: rspamd.yml
+
 # open up ports for exim
 - name: allow SMTP ports in the firewall
   firewalld: port={{ item }}/tcp immediate=true permanent=true state=enabled

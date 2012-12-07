@@ -1,0 +1,18 @@
+---
+
+- yum: name={{ item }} state=present
+  with_items:
+    - rspamd
+
+# Using "0" as threshold for BAYES_HAM autolearning seems to be a bit too
+# naive as a message with a good mime structure and no negative identifiers will
+# have -0.3.
+- name: add custom settings for bayes autolearning
+  copy: >
+    src=rspamd-statistic.conf
+    dest=/etc/rspamd/local.d/statistic.conf
+    owner=root mode=0644
+
+- name: enable rspamd.socket
+  service: name=rspamd.socket enabled=true state=started
+
