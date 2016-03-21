@@ -1,0 +1,10 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+
+[Match]
+Name=eth0
+
+[Network]
+# VMs below virt-manager don't have IPv6 connectivity but use DHCP to get a DHCP address
+DHCP=ipv4
+LinkLocalAddressing=ipv4
+

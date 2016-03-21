@@ -1,0 +1,15 @@
+---
+# Handlers for common notifications
+
+- name: restart ntp
+  service: name=ntpd state=restarted
+
+- name: restart sshd
+  service: name=sshd state=reloaded
+
+- name: reload firewalld rules
+  command: firewall-cmd --reload
+
+- name: reload systemd service files
+  command: systemctl daemon-reload
+

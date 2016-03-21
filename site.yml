@@ -1,0 +1,14 @@
+---
+
+- hosts: all:!localhost
+  remote_user: root
+  roles:
+  - role: common
+    tags: common
+
+
+- hosts: dummy
+  remote_user: root
+  roles:
+  - role: vm-guest
+    tags: vm-guest

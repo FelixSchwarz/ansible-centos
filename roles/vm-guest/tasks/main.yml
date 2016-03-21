@@ -1,0 +1,36 @@
+---
+# This role contains plays for VM guests
+
+# Remove a couple of packages which are not useful on a virtualized system
+- name: remove packages
+  yum: name={{ item }} state=absent
+  with_items:
+    - dnsmasq           # DNS is resolved via systemd-resolved, no other need for dnsmasq
+
+    # firmware packages - virtualized hardware doesn't need these (saves about 100 MB)
+    # rpm -qa | grep firmware | sort
+    - aic94xx-firmware-30-6.el7.noarch
+    - alsa-firmware-1.0.28-2.el7.noarch
+    - alsa-tools-firmware-1.0.28-2.el7.x86_64
+    - ivtv-firmware-20080701-26.el7.noarch
+    - iwl1000-firmware-39.31.5.1-43.el7.noarch
+    - iwl100-firmware-39.31.5.1-43.el7.noarch
+    - iwl105-firmware-18.168.6.1-43.el7.noarch
+    - iwl135-firmware-18.168.6.1-43.el7.noarch
+    - iwl2000-firmware-18.168.6.1-43.el7.noarch
+    - iwl2030-firmware-18.168.6.1-43.el7.noarch
+    - iwl3160-firmware-22.0.7.0-43.el7.noarch
+    - iwl3945-firmware-15.32.2.9-43.el7.noarch
+    - iwl4965-firmware-228.61.2.24-43.el7.noarch
+    - iwl5000-firmware-8.83.5.1_1-43.el7.noarch
+    - iwl5150-firmware-8.24.2.2-43.el7.noarch
+    - iwl6000-firmware-9.221.4.1-43.el7.noarch
+    - iwl6000g2a-firmware-17.168.5.3-43.el7.noarch
+    - iwl6000g2b-firmware-17.168.5.2-43.el7.noarch
+    - iwl6050-firmware-41.28.5.1-43.el7.noarch
+    - iwl7260-firmware-22.0.7.0-43.el7.noarch
+    - iwl7265-firmware-22.0.7.0-43.el7.noarch
+    - linux-firmware-20150904-43.git6ebf5d5.el7.noarch
+
+- meta: flush_handlers
+
