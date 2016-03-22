@@ -119,7 +119,6 @@
 - name: remove packages
   yum: name={{ item }} state=absent
   with_items:
-    - postfix           # we're using Exim!
     - tuned             # only necessary for power saving modes for SATA/ethernet
     # items which were only installed for NetworkManager
     # avahi, polkit and wpa_supplicant are daemons so uninstalled them will
