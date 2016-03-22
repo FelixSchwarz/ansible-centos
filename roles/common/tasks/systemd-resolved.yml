@@ -1,0 +1,26 @@
+---
+
+- name: install systemd-resolved
+  yum: name={{ item }} state=present
+  with_items:
+    - systemd-resolved
+
+- name: enable systemd-resolved
+  service: name=systemd-resolved    state=started enabled=true
+
+# in order to use systemd-resolved for all name lookups (e.g. via glibc) the
+# systemd developers recommend replacing /etc/resolv.conf with a symlink to
+# the "resolv.conf" created by systemd-resolved
+# However /etc/resolv.conf already exists as a plain file (but not owned by
+# any package) and ansible won't just replace it with a symlink, so...
+- name: check the current symlink
+  stat: path=/etc/resolv.conf
+  register: resolve_conf
+
+- name: remove resolv.conf (it is no symlink already)
+  file: path=/etc/resolv.conf state=absent
+  when: resolve_conf.stat.islnk is defined and not resolve_conf.stat.islnk
+
+- name: use DNS servers configured by resolved for all name resolving
+  file: src=/run/systemd/resolve/resolv.conf dest=/etc/resolv.conf state=link
+

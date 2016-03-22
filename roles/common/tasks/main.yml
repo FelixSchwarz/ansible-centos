@@ -43,75 +43,16 @@
     - iftop
     - tcpdump
 
-# ------------------------------------------------------------------------------
-# configure networking using systemd-networkd to the maximum extend
-# - utilities are pretty slim (saves quite a bit of RAM)
-# - utilities are *really* well integrated/handling a lot of edge cases
-# - a lot of functionality (e.g. trivial DNS caching, DNSSEC for systemd 229+)
-# - configuration is easily readable
-#
-# The only downside is that Red Hat disables several features in RHEL:
-# - timesyncd (which knows about wait-online, just has an NTP client - less RAM, no accidental reflection attacks possible)
-# - user sessions in logind (no user-specific service management)
-- name: install systemd-networkd
-  yum: name={{ item }} state=present
-  with_items:
-    - systemd-networkd
 
-- name: create /etc/systemd/network
-  file: path=/etc/systemd/network state=directory
 
-- name: configure networkd
-  copy: src=10-eth0.network_({{ hostname }}) dest=/etc/systemd/network/10-eth0.network
 
-- name: stop NetworkManager
-  service: name=NetworkManager    state=stopped enabled=false
 
-- name: remove NetworkManager
-  yum: name={{ item }} state=absent
-  with_items:
-    - NetworkManager
 
-- name: enable systemd-networkd
-  service: name=systemd-networkd    state=started enabled=true
+- include: systemd-networkd.yml
+  tags: systemd-networkd
 
-- name: enable systemd-networkd-wait-online
-  service: name=systemd-networkd-wait-online    state=started enabled=true
-
-- name: disable legacy network scripts
-  # we must not stop the legacy "network" service as this would immediately
-  # stop all network connections. Instead just leave it running and just disable
-  # the old service - "systemd-networkd" will take over after the next reboot.
-  # (btw not using the old init script saves about 5-10 MB RAM)
-  service: name=network    enabled=false
-
-# ------------------------------------------------------------------------------
-
-- name: install systemd-resolved
-  yum: name={{ item }} state=present
-  with_items:
-    - systemd-resolved
-
-- name: enable systemd-resolved
-  service: name=systemd-resolved    state=started enabled=true
-
-# in order to use systemd-resolved for all name lookups (e.g. via glibc) the
-# systemd developers recommend replacing /etc/resolv.conf with a symlink to
-# the "resolv.conf" created by systemd-resolved
-# However /etc/resolv.conf already exists as a plain file (but not owned by
-# any package) and ansible won't just replace it with a symlink, so...
-- name: check the current symlink
-  stat: path=/etc/resolv.conf
-  register: resolve_conf
-
-- name: remove resolv.conf (it is no symlink already)
-  file: path=/etc/resolv.conf state=absent
-  when: resolve_conf.stat.islnk is defined and not resolve_conf.stat.islnk
-
-- name: use DNS servers configured by resolved for all name resolving
-  file: src=/run/systemd/resolve/resolv.conf dest=/etc/resolv.conf state=link
-
-# ------------------------------------------------------------------------------
+- include: systemd-resolved.yml
+  tags: systemd-resolved
 
 
 # This removes a couple of services to save RAM (quite a bit, about 50 MB!)
