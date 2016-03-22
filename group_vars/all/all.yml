@@ -3,6 +3,6 @@
 ssh_root_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA8ZZYqV7HcKE/ly5GpRks7wd/W6rfquvGzl1jvGaNJJmLJggD9yOoV22jL//HDIdpbL754wyT2p5MjTJu7aTA2poqtKjxqzQWu4eHYB66PwN1f9HrPC+2suWgNFP8sPBlkYiqpOKtl6+uZc8zWVCfDzgvdnG85ez/UZYRLihpm3RVZYO6E/2K2a+fOzEiuWFkODVXYi9BF+t0DEAS/KhMw5YRhL980lrxC1XFdPT8w6TRgdvdU2i4H1d5lMYeWXe696+IVM9wxoZOFeYzTS+Ex4vWKGEtTy2LlSaCJXOYnT6GoVFtXtpwNJZ0pyQObenrY3cg4Pz8mzfHh0on6cSH admin@devnull.example
 
-admin_email:
+admin_emails:
   - admin@devnull.example
 

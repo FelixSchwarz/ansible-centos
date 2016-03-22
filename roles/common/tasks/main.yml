@@ -142,5 +142,14 @@
   register: sestatus
   changed_when: false
 
+- name: redirect mails for root to server admin email
+  lineinfile:
+    dest: /etc/aliases
+    # need single-quotes here to avoid yaml syntax error
+    # https://github.com/ansible/ansible/issues/1341
+    regexp: '^\s*root:'
+    line: "root:		{{ admin_emails | join(', ') }}"
+    state: present
+
 - meta: flush_handlers
 
