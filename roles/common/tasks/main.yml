@@ -43,6 +43,8 @@
     - iftop
     - tcpdump
 
+- include: etckeeper.yml
+  tags: etckeeper
 
 
 

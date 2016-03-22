@@ -1,0 +1,24 @@
+---
+
+- name: install etckeeper
+  yum: name=etckeeper state=present
+
+- name: check if etckeeper is initialized already
+  stat: path=/etc/.etckeeper
+  register: dot_etckeeper
+
+- command: etckeeper init
+  args:
+    chdir: /etc
+  when: dot_etckeeper.stat.exists == False
+
+
+- name: check if etckeeper git repo has at least one commit
+  stat: path=/etc/.git/refs/heads/master
+  register: etckeeper_git
+
+- command: etckeeper commit "initial commit"
+  args:
+    chdir: /etc
+  when: etckeeper_git.stat.exists == False
+
