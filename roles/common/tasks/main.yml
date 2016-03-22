@@ -46,9 +46,22 @@
 - include: etckeeper.yml
   tags: etckeeper
 
+# systemd timers do not send emails on failure (as cron does) however we can
+# work around that limitation by installing a custom service which will send
+# an email with a journalctl output (as systemd records all output anyway the
+# admin will have all data necessary to diagnose the problem).
+# more in-depth explanation in (and all credits to) the Arch Linux wiki:
+# https://wiki.archlinux.org/index.php/Systemd/Timers#MAILTO
+- name: install systemd-send-email script
+  copy: src=systemd-send-email dest=/usr/local/bin/systemd-send-email owner=root group=root mode=0755
+
+- name: install systemd-status-email.service
+  copy: src=systemd-status-email.service dest=/etc/systemd/system/systemd-status-email.service mode=0644
+  notify: reload systemd units
 
 
-
+- include: yum-cron.yml
+  tags: yum-cron
 
 - include: systemd-networkd.yml
   tags: systemd-networkd

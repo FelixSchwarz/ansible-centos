@@ -1,0 +1,23 @@
+---
+
+- name: install yum-cron
+  yum: name=yum-cron state=present
+
+- name: copy yum-cron.conf
+  copy: src=yum-cron.conf dest=/etc/yum/yum-cron.conf mode=0644
+
+- name: install yum-cron.service
+  copy: src=yum-cron.service dest=/etc/systemd/system/yum-cron.service mode=0644
+  notify: reload systemd units
+
+- name: install yum-cron.timer
+  copy: src=yum-cron.timer dest=/etc/systemd/system/yum-cron.timer mode=0644
+  notify: reload systemd units
+
+- name: enable yum-cron.service
+  service: name=yum-cron state=started enabled=true
+
+- name: enable yum-cron.timer
+  service: name=yum-cron.timer state=started enabled=true
+- meta: flush_handlers
+

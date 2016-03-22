@@ -1,0 +1,15 @@
+#!/bin/bash
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+#
+# source: https://wiki.archlinux.org/index.php/Systemd/Timers#MAILTO
+
+/usr/sbin/sendmail -t <<ERRMAIL
+To: $1
+From: systemd <root@$HOSTNAME>
+Subject: $2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+
+$(systemctl status --full "$2")
+ERRMAIL
+
