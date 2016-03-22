@@ -24,3 +24,17 @@
 - name: use DNS servers configured by resolved for all name resolving
   file: src=/run/systemd/resolve/resolv.conf dest=/etc/resolv.conf state=link
 
+- name: use resolved via glibc
+  lineinfile:
+    dest: /etc/nsswitch.conf
+    # need single-quotes here to avoid yaml syntax error
+    # https://github.com/ansible/ansible/issues/1341
+    regexp: '^\s*hosts:'
+    # from the systemd-resolved documentation
+    # > It is recommended to place "resolve" early in /etc/nsswitch.conf'
+    # > "hosts:" line (but after the "files" or "mymachines" entries), replacing
+    # > the "dns" entry if it exists, to ensure DNS queries are always routed
+    # > via systemd-resolved(8).
+    line: "hosts:      files resolve myhostname"
+    state: present
+
