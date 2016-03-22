@@ -22,6 +22,9 @@
     - firewalld
     - cronie
 
+- name: Disable CentOS extras
+  copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
+
 # these utilities might include packages from EPEL so it is important that
 # "epel-release" was installed before (see "base packages" above)
 - name: system utilities
@@ -126,9 +129,6 @@
     - wpa_supplicant    # our servers don't have WLAN
     - polkit            # also removes NetworkManager
     - mozjs17
-
-- name: Disable CentOS extras
-  copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
 
 - include: ntp.yml
   tags: ntp
