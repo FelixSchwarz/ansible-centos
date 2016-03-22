@@ -21,7 +21,6 @@
     - epel-release
     - firewalld
     - cronie
-    - ntp
 
 # these utilities might include packages from EPEL so it is important that
 # "epel-release" was installed before (see "base packages" above)
@@ -131,12 +130,8 @@
 - name: Disable CentOS extras
   copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
 
-- name: Configure ntp file
-  copy: src=ntp.conf dest=/etc/ntp.conf
-  notify: restart ntp
-
-- name: Start the ntp service
-  service: name=ntpd state=started enabled=true
+- include: ntp.yml
+  tags: ntp
 
 - name: test to see if selinux is running
   command: getenforce
