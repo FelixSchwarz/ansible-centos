@@ -10,6 +10,6 @@
 - name: reload firewalld rules
   command: firewall-cmd --reload
 
-- name: reload systemd service files
+- name: reload systemd units
   command: systemctl daemon-reload
 
