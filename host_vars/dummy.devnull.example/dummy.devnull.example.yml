@@ -2,3 +2,11 @@
 
 hostname: dummy.devnull.example
 
+# The following data is actually sensitive and should be stored in an encrypted
+# file (ansible vault). As this just an example configuration you can see the
+# data in clear text :-)
+
+# actually "root_passwort" is never used directly but let's store it for
+# reference in case I need to enter it somewhere...
+# root_password: "kieyie2eathaivoYaega"
+root_password_hash: "$6$VL7rXZjsL.35werO$OkGCg84BZuAv7pWCFfa/nr/s4CocCqn9hwK9Gl65FNaDbBBjn3bSOBdSaLFlqVzIlWx51I8EzshRlx/YdXB0H/"
