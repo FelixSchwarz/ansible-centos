@@ -18,7 +18,7 @@
   file: path=/etc/systemd/network state=directory
 
 - name: configure networkd
-  copy: src=10-eth0.network_({{ hostname }}) dest=/etc/systemd/network/10-eth0.network
+  copy: src=host_files/{{ inventory_hostname }}/10-eth0.network dest=/etc/systemd/network/10-eth0.network
 
 - name: stop NetworkManager
   service: name=NetworkManager    state=stopped enabled=false
