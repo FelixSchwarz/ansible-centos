@@ -1,0 +1,39 @@
+---
+
+- yum: name={{ item }} state=present
+  with_items:
+    - dovecot
+    - dovecot-pigeonhole # sieve functionality
+
+- copy: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf owner=root group=root mode=0640
+- copy: src=dovecot/dovecot-sql.conf.ext dest=/etc/dovecot/dovecot-sql.conf.ext owner=root group=root mode=0644
+- copy: src={{ item }} dest=/etc/dovecot/conf.d/ owner=root group=root mode=0640
+  with_fileglob:
+    - dovecot/conf.d/*.conf
+  no_log: True
+
+# create symlinks to certificates - hopefully "10-ssl.conf" is more generic that way.
+- file: path=/etc/dovecot/tls state=directory owner=root group=mail mode=0750
+
+# not all VMs should use letsencrypt
+- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem dest=/etc/dovecot/tls/fullchain.pem state=link
+  when: use_letsencrypt_cert
+- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/privkey.pem dest=/etc/dovecot/tls/privkey.pem state=link
+  when: use_letsencrypt_cert
+
+- file: src=/etc/pki/dovecot/certs/dovecot.pem dest=/etc/dovecot/tls/fullchain.pem state=link
+  when: not use_letsencrypt_cert
+- file: src=/etc/pki/dovecot/private/dovecot.pem dest=/etc/dovecot/tls/privkey.pem state=link
+  when: not use_letsencrypt_cert
+
+
+- name: enable dovecot
+  service: name=dovecot state=started enabled=true
+
+- firewalld: port=993/tcp permanent=true state=enabled
+- firewalld: port=995/tcp permanent=true state=enabled
+
+# block unencrypted pop3/imap by default
+- firewalld: port=110/tcp permanent=true state=disabled
+- firewalld: port=143/tcp permanent=true state=disabled
+

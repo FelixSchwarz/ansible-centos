@@ -1,0 +1,87 @@
+---
+
+- yum: name={{ item }} state=present
+  with_items:
+    - exim
+
+- yum: name={{ item }} state=absent
+  with_items:
+    - postfix
+
+
+# configuration files for exim must not be owned by the Exim runtime user ("exim")
+# and must not be writable for that user (these are constraints enforced by
+# exim itself).
+# The idea is that Exim can not be tricked into modifying its own config in case
+# a bug is being exploited.
+# Also let's make the file unreadable for all other users just in case there
+# are secrets inside (e.g. passwords).
+- name: copy basic exim.conf
+  copy:
+    src: exim.conf
+    dest: /etc/exim/exim.conf
+    owner: root
+    group: exim
+    mode: 0640
+  register: exim_conf
+
+- name: copy host-specific configuration files for exim
+  copy:
+    content: "{{ exim_local_conf }}"
+    dest: /etc/exim/local.conf
+    owner: root
+    group: exim
+    mode: 0640
+  register: exim_local_conf
+
+# DKIM keys are not managed by ansible but let's create the folder at least
+- name: create /etc/exim/dkim
+  file:
+      path: /etc/exim/dkim
+      state: directory
+      owner: root
+      group: mail
+      mode:  0750
+
+# --- letsencrypt --------------
+
+# ability to use self-signed keys without changing the exim configuration
+- file: path=/etc/exim/tls state=directory owner=exim group=mail mode=0750
+
+- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem dest=/etc/exim/tls/fullchain.pem state=link
+  when: use_letsencrypt_cert
+- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/privkey.pem dest=/etc/exim/tls/privkey.pem state=link
+  when: use_letsencrypt_cert
+
+# force=yes because Exim generates these certificates on its first startup so
+# they might not exist so far.
+- file: src=/etc/pki/tls/certs/exim.pem dest=/etc/exim/tls/fullchain.pem state=link force=yes
+  when: not use_letsencrypt_cert
+- file: src=/etc/pki/tls/private/exim.pem dest=/etc/exim/tls/privkey.pem state=link force=yes
+  when: not use_letsencrypt_cert
+
+# Exim loads all keys/certificates using its runtime user "exim" - which is not
+# allowed to access the certificates directly because letsencrypt allows only
+# root access for these (most software loads tls certificates as root).
+# https://github.com/letsencrypt/letsencrypt/issues/1473
+#  https://github.com/letsencrypt/letsencrypt/pull/1705
+#  https://github.com/letsencrypt/letsencrypt/pull/1760
+#
+# letsencrypt 0.5 should add shell hooks so we could modify filesystem
+# ownership/permissions as necessary. Until then we just open up
+# /etc/letsencrypt/archive for exim which gives exim access to all certificates.
+- file: path=/etc/letsencrypt/archive state=directory owner=root group=exim mode=0750
+  when: use_letsencrypt_cert
+
+# ----------------------------
+
+- name: validate exim configuration
+  command: exim -C /etc/exim/exim.conf -bV
+  when: exim_conf.changed or exim_local_conf.changed
+
+- name: enable exim
+  service: name=exim state=started enabled=true
+
+- firewalld: port=25/tcp permanent=true state=enabled
+- firewalld: port=587/tcp permanent=true state=enabled
+

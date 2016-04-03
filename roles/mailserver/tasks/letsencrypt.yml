@@ -1,0 +1,30 @@
+---
+
+- yum: name={{ item }} state=present
+  with_items:
+    - letsencrypt
+
+# needed to for acme challenges
+- firewalld: port=80/tcp permanent=true state=enabled
+  when: use_letsencrypt_cert
+
+# /etc/letsencrypt is owned by the letsencrypt rpm but only created when the
+# program is executed for the first time. I'd like to put the client.ini in
+# /etc/letsencrypt (see below) so we need to create the directory first.
+- file: path=/etc/letsencrypt state=directory owner=root group=root mode=0755
+
+# jinja2 template so we can have a dynamic admin email address
+- template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/client.ini owner=root group=root mode=0640
+
+- name: check if host already has a letsencrypt cert
+  stat: path=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem
+  when: use_letsencrypt_cert
+  register: letsencrypt_hostcert
+
+- name: generate letsencrypt host cert
+  shell: letsencrypt certonly --config /etc/letsencrypt/client.ini {{ letsencrypt_host_domains | join('-d ') }}
+  when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
+
+
+
+

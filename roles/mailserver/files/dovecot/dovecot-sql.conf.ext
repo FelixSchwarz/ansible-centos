@@ -1,0 +1,11 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+
+driver = sqlite
+connect = /srv/mail/userdb.sqlite
+
+password_query = SELECT local_part AS username, domain, password \
+  FROM users WHERE local_part = '%n' AND domain = '%d'
+
+# For using doveadm -A:
+iterate_query = SELECT local_part AS username, domain FROM users
+

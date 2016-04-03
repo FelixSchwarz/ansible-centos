@@ -1,0 +1,22 @@
+---
+# This role contains plays for mailserver hosts using Exim and dovecot.
+
+- name: create /srv/mail
+  file:
+      path: /srv/mail
+      state: directory
+      owner: root
+      group: mail
+      mode:  0750
+
+- include: userdb.yml
+
+- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains[0] }}
+  when: use_letsencrypt_cert
+
+- include: letsencrypt.yml
+- include: exim.yml
+- include: dovecot.yml
+
+- meta: flush_handlers
+

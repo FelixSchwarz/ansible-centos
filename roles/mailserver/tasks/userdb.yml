@@ -1,0 +1,31 @@
+---
+
+- yum: name={{ item }} state=present
+  with_items:
+    - sqlite
+
+- name: check if userdb is initialized already
+  stat: path=/srv/mail/userdb.sqlite
+  register: userdb_sqlite
+
+- name: provide userdb sql schema
+  copy: src=userdb.sql dest=/srv/mail/userdb.sql
+  when: userdb_sqlite.stat.exists == False
+
+- name: create empty userdb
+  file:
+      path: /srv/mail/userdb.sqlite
+      state: touch
+      owner: root
+      group: mail
+      mode:  0640
+  when: userdb_sqlite.stat.exists == False
+
+- name: create userdb tables
+  shell: sqlite3 /srv/mail/userdb.sqlite < /srv/mail/userdb.sql
+  when: userdb_sqlite.stat.exists == False
+
+# we don't need the sql schema afterwards...
+- name: remove userdb sql schema
+  file: path=/srv/mail/userdb.sql state=absent
+
