@@ -30,18 +30,18 @@
 - name: system utilities
   yum: name={{ item }} state=present
   with_items:
-    - wget
-    - logrotate
-    - sudo
     - ack
     - bash-completion
-    - screen
-    - mtr
     - htop
-    - nano
-    - iotop
     - iftop
+    - iotop
+    - logrotate
+    - mtr
+    - nano
+    - screen
+    - sudo
     - tcpdump
+    - wget
 
 - include: etckeeper.yml
   tags: etckeeper
