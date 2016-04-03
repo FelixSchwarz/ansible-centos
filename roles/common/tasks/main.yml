@@ -38,6 +38,7 @@
     - logrotate
     - mtr
     - nano
+    - rsync
     - screen
     - sudo
     - tcpdump
