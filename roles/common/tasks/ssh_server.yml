@@ -23,9 +23,7 @@
     state=directory
     path=/srv/sftp
     owner=root group=root
-    mode=551
-
-# To set up a user, use the sftp-access role if possible. If not, check the code there or in the backup server setup for inspiration.
+    mode=0551
 
 - name: Configure sshd file
   copy: src="sshd_config.c{{ ansible_distribution_major_version }}" dest=/etc/ssh/sshd_config
