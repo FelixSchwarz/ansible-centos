@@ -89,6 +89,9 @@
 - include: ntp.yml
   tags: ntp
 
+- include: borgbackup.yml
+  when: borg_target is defined and borg_target
+
 - name: test to see if selinux is running
   command: getenforce
   register: sestatus

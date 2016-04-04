@@ -1,0 +1,25 @@
+---
+
+- name: install borgbackup
+  yum: name={{ item }} state=present
+  with_items:
+    - borgbackup
+    - fuse-sshfs
+
+- file: path={{ borg_target }} state=directory owner=root group=root mode=0700
+
+- name: install borg wrapper script
+  copy: src=borgwrapper.sh dest=/usr/local/bin/borgwrapper.sh owner=root group=root mode=0700
+
+# not attempt to initialize a borg repository - this seems too much hassle
+# right now as it is only done once per server. Also often there are
+# backend-specific preparations to do (e.g. creating a directory on the backup
+# server).
+
+- cron:
+    name: "run borg backup"
+    minute: "11"
+    hour: "2"
+    job: "/usr/local/bin/borgwrapper.sh {{ borg_sshsource }} {{ borg_target }} '{{ borg_prescript }}' '{{ borg_postscript }}' {{ borg_sources | join(' ') }}"
+
+
