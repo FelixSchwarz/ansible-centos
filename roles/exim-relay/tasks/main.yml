@@ -35,7 +35,7 @@
     mode: 0640
 
 - copy:
-    src: exim-{{ hostname }}-rewrite.conf
+    src: host_files/{{ inventory_hostname }}/exim-rewrite.conf
     dest: /etc/exim/rewrite.conf
     owner: root
     group: exim
