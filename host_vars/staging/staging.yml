@@ -1,6 +1,6 @@
 ---
 
-hostname: dummy.devnull.example
+hostname: staging.devnull.example
 
 # The following data is actually sensitive and should be stored in an encrypted
 # file (ansible vault). As this just an example configuration you can see the
@@ -20,6 +20,6 @@ exim_local_conf: |
   # This file is managed by Ansible. Don't make changes here, they will be overwritten.
   
   SMARTHOST_HOSTNAME = mail.devnull.example
-  SMARTHOST_USER = dummy@devnull.example
+  SMARTHOST_USER = staging@devnull.example
   SMARTHOST_PASSWORD = secret
 
