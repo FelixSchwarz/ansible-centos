@@ -7,7 +7,7 @@
     tags: common
 
 
-- hosts: dummy
+- hosts: staging
   remote_user: root
   roles:
   - role: vm-guest
