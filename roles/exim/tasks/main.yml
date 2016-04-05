@@ -1,4 +1,6 @@
 ---
+# This role contains plays for hosts using Exim as relay (sending emails via
+# dedicated mail server/"smart host")
 
 - yum: name={{ item }} state=present
   with_items:
@@ -17,14 +19,29 @@
 # Also let's make the file unreadable for all other users just in case there
 # are secrets inside (e.g. passwords).
 - name: copy basic exim.conf
-  copy:
-    src: exim.conf
-    dest: /etc/exim/exim.conf
-    owner: root
-    group: exim
-    mode: 0640
+  copy: src=exim.conf dest=/etc/exim/exim.conf owner=root group=exim mode=0640
   register: exim_conf
 
+- copy: src={{ exim_acls_conf_path }} dest=/etc/exim/acls.conf owner=root group=exim mode=0640
+  register: exim_acls_conf
+
+- copy: src={{ exim_role_conf_path }} dest=/etc/exim/role.conf owner=root group=exim mode=0640
+  register: exim_role_conf
+
+- copy: src={{ exim_routers_conf_path }}  dest=/etc/exim/routers.conf owner=root group=exim mode=0640
+  register: exim_routers_conf
+
+- copy: src={{ exim_transports_conf_path }}  dest=/etc/exim/transports.conf owner=root group=exim mode=0640
+  register: exim_transports_conf
+
+- copy: src={{ exim_rewrite_conf_path }}  dest=/etc/exim/rewrite.conf owner=root group=exim mode=0640
+  register: exim_rewrite_conf
+
+- copy: src={{ exim_authenticators_conf_path }}  dest=/etc/exim/authenticators.conf owner=root group=exim mode=0640
+  register: exim_authenticators_conf
+
+
+# copy host-specific configuration files for exim
 - name: copy host-specific configuration files for exim
   copy:
     content: "{{ exim_local_conf }}"
@@ -32,7 +49,13 @@
     owner: root
     group: exim
     mode: 0640
+  when: exim_local_conf is defined
   register: exim_local_conf
+
+- file: path=/etc/exim/local.conf state=absent
+  when: exim_local_conf is not defined
+  register: exim_local_conf
+
 
 # DKIM keys are not managed by ansible but let's create the folder at least
 - name: create /etc/exim/dkim
@@ -43,8 +66,8 @@
       group: mail
       mode:  0750
 
-# --- letsencrypt --------------
 
+# , --- letsencrypt --------------------------------------------------------------
 # ability to use self-signed keys without changing the exim configuration
 - file: path=/etc/exim/tls state=directory owner=exim group=mail mode=0750
 
@@ -72,16 +95,15 @@
 # /etc/letsencrypt/archive for exim which gives exim access to all certificates.
 - file: path=/etc/letsencrypt/archive state=directory owner=root group=exim mode=0750
   when: use_letsencrypt_cert
+#` --- letsencrypt --------------------------------------------------------------
 
-# ----------------------------
 
 - name: validate exim configuration
   command: exim -C /etc/exim/exim.conf -bV
-  when: exim_conf.changed or exim_local_conf.changed
+  when: exim_conf.changed or exim_local_conf.changed or exim_role_conf.changed or exim_acls_conf.changed or exim_routers_conf.changed or exim_transports_conf.changed or exim_rewrite_conf.changed or exim_transports_conf.changed
 
 - name: enable exim
   service: name=exim state=started enabled=true
 
-- firewalld: port=25/tcp permanent=true state=enabled
-- firewalld: port=587/tcp permanent=true state=enabled
+- meta: flush_handlers
 

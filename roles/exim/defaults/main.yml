@@ -1,0 +1,11 @@
+
+exim_role_conf_path: relay/role.conf
+exim_acls_conf_path: acls.conf
+exim_routers_conf_path: relay/routers.conf
+exim_transports_conf_path: relay/transports.conf
+exim_rewrite_conf_path: rewrite.conf
+exim_authenticators_conf_path: relay/authenticators.conf
+
+use_letsencrypt_cert: False
+
+

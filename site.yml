@@ -12,6 +12,6 @@
   roles:
   - role: vm-guest
     tags: vm-guest
-  - role: exim-relay
-    tags: exim-relay
+  - role: exim
+    tags: exim
 

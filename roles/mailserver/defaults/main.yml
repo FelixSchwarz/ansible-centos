@@ -1,8 +1,0 @@
----
-
-# force hosts to enable letsencrypt explicitely. Do not try to authorize
-# arbitrary domains (e.g. for testing VMs) accidentally.
-# (I was unable to derive a true bool variable from the "letsencrypt_host_domains"
-# variable so this information is a bit duplicated...)
-use_letsencrypt_cert: False
-
