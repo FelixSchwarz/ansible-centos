@@ -31,6 +31,7 @@
     - iwl7260-firmware-22.0.7.0-43.el7.noarch
     - iwl7265-firmware-22.0.7.0-43.el7.noarch
     - linux-firmware-20150904-43.git6ebf5d5.el7.noarch
+  no_log: True
 
 - meta: flush_handlers
 
