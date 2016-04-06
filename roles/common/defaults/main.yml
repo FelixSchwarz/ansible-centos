@@ -3,7 +3,10 @@
 borg_prescript: ""
 borg_postscript: ""
 
-# I would hope that SELinux basically "just" works nowadays but still I don't see
-# huge value in having it so I want to disable easily when encountering problems.
-selinux_mode: enforcing
+# I hoped that SELinux basically "just" works in CentOS but it doesn't. Even
+# common services like exim, dovecot and chronyd want to use DBUS but they are
+# blocked...
+# I don't see huge value in having SELinux so disable it for now (and reconsider
+# this decision in CentOS 8 as SELinux seems to work fine Fedora 23).
+selinux_mode: disabled
 
