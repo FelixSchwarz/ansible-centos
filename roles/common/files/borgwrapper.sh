@@ -13,9 +13,16 @@ if [ $NR_ARGUMENTS -lt 5 ]; then
     exit 1
 fi
 
+if [ "$MOUNTPOINT" == "n/a" ]; then
+    BORGREPO="${SSHSOURCE}"
+    SSHSOURCE="n/a"
+else
+    BORGREPO="${MOUNTPOINT}"
+fi
+
 if $(grep -qs " ${MOUNTPOINT} fuse.sshfs" /proc/mounts); then
     /bin/true;
-else
+elif [ "$SSHSOURCE" != "n/a" ]; then
     /usr/bin/sshfs "${SSHSOURCE}" "${MOUNTPOINT}" -o reconnect,cache=no,noauto_cache,entry_timeout=0
     SSHFS_RESULT=$?
     if [ "$SSHFS_RESULT" != "0" ]; then
@@ -25,7 +32,9 @@ else
 fi
 
 function unmount_sshfs {
-    /usr/bin/fusermount -u "${MOUNTPOINT}"
+    if [ "$MOUNTPOINT" != "n/a" ]; then
+        /usr/bin/fusermount -u "${MOUNTPOINT}"
+    fi
 }
 
 if [ -n "$PRE_SCRIPT" ]; then
@@ -44,9 +53,9 @@ export BORG_RELOCATED_REPO_ACCESS_IS_OK=yes
 # (remember, first argument is the script name, four following parameters defined
 #  at the top of the script.)
 # using "${@:...}" actually escapes arguments containing spaces correctly but
-# we must store that in a simple variable (otherwise the magic is lost)
+# we must not store that in a simple variable (otherwise the magic is lost)
 borg create --stats \
-    --compression=lzma,6 ${MOUNTPOINT}::$(date --iso-8601=seconds) \
+    --compression=lzma,6 ${BORGREPO}::$(date --iso-8601=seconds) \
     "${@:5}"
     #--exclude-caches was only added past 1.0
 BORG_RESULT=$?
@@ -58,11 +67,11 @@ fi
 
 if [ "$(date +%u)" == "0" ]; then
     # on Sunday do a full check (archives might take a while...)
-    borg check ${MOUNTPOINT}
+    borg check ${BORGREPO}
     CHECK_RESULT=$?
 else
     # on all other days just a quick repo check
-    borg check --repository-only ${MOUNTPOINT}
+    borg check --repository-only ${BORGREPO}
     CHECK_RESULT=$?
 fi
 if [ "$CHECK_RESULT" != "0" ]; then
@@ -71,7 +80,7 @@ if [ "$CHECK_RESULT" != "0" ]; then
     exit 15
 fi
 
-borg prune --keep-daily=7 --keep-weekly=4 --keep-monthly=4 ${MOUNTPOINT}
+borg prune --keep-daily=7 --keep-weekly=4 --keep-monthly=4 ${BORGREPO}
 
 if [ -n "$POST_SCRIPT" ]; then
     ${POST_SCRIPT}
