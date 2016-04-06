@@ -3,3 +3,7 @@
 borg_prescript: ""
 borg_postscript: ""
 
+# I would hope that SELinux basically "just" works nowadays but still I don't see
+# huge value in having it so I want to disable easily when encountering problems.
+selinux_mode: enforcing
+

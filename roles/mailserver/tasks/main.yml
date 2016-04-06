@@ -11,10 +11,6 @@
 
 - include: userdb.yml
 
-- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains[0] }}
-  when: use_letsencrypt_cert
-- include: letsencrypt.yml
-
 # open up ports for exim
 - firewalld: port=25/tcp permanent=true state=enabled
 - firewalld: port=587/tcp permanent=true state=enabled

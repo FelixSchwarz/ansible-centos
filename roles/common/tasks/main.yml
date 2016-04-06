@@ -14,6 +14,15 @@
 # it only once when creating the user)
 #  user: name=root password={{ root_password |password_hash('sha512') }}
 
+- name: set configured SELinux mode
+  lineinfile:
+    dest: /etc/selinux/config
+    # need single-quotes here to avoid yaml syntax error
+    # https://github.com/ansible/ansible/issues/1341
+    regexp: '^\s*SELINUX\s*=\s*'
+    line: "SELINUX={{ selinux_mode }}"
+    state: present
+
 - name: base packages
   yum: name={{ item }} state=present
   with_items:
