@@ -1,0 +1,19 @@
+---
+- name: install chrony
+  yum: name={{ item }} state=present
+  with_items:
+     - chrony
+     # on Fedora 23 chrony and ntpd depend on polkit so polkit might be
+     # required even on CentOS 7
+     # Without this package I see DBUS errors and firewalld is not configured
+     # correctly without rebooting. Listing the package here (even though it
+     # should be present even in a minimal install) to document the dependency.
+     # Please note that just installing polkit (if it was not present before)
+     # does not resolve all problems (only after a reboot), e.g. firewalld
+     # calls could hang. Likely cause is explained in
+     # https://bugzilla.redhat.com/show_bug.cgi?id=1099031#c3
+     - polkit
+
+- name: Start the chrony ntp service
+  service: name=chronyd state=started enabled=true
+

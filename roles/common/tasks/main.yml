@@ -56,6 +56,8 @@
 - include: etckeeper.yml
   tags: etckeeper
 
+- include: chrony.yml
+
 # systemd timers do not send emails on failure (as cron does) however we can
 # work around that limitation by installing a custom service which will send
 # an email with a journalctl output (as systemd records all output anyway the
@@ -87,16 +89,11 @@
   with_items:
     - tuned             # only necessary for power saving modes for SATA/ethernet
     # items which were only installed for NetworkManager
-    # avahi, polkit and wpa_supplicant are daemons so uninstalled them will
+    # avahi, polkit and wpa_supplicant are daemons so uninstalling them will
     # also reduce memory usage
     - jansson
     - avahi-libs        # no need for service autodiscovery
     - wpa_supplicant    # our servers don't have WLAN
-    - polkit            # also removes NetworkManager
-    - mozjs17
-
-- include: ntp.yml
-  tags: ntp
 
 - include: borgbackup.yml
   when: borg_target is defined and borg_target
