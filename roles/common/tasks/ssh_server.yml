@@ -1,19 +1,11 @@
 ---
 
 - name: SSH Keys
-  authorized_key: user=root key="{{ item }}"
+  authorized_key: user=root key="{{ item }}" exclusive=True
   with_items:
     - "{{ ssh_root_keys }}"
     - "{{ ssh_root_keys_for_group | default([]) }}"
   tags: ssh_keys
-  no_log: True
-
-- name: Remove obsolete SSH Keys
-  authorized_key: state=absent user=root key="{{ item }}"
-  with_items: ssh_obsolete_root_keys
-  when: "{{ ssh_obsolete_root_keys | default([]) }}"
-  tags:
-    - ssh_keys
   no_log: True
 
 - group: name=sftponly
