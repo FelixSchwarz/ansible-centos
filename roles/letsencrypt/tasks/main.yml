@@ -1,5 +1,8 @@
 ---
 
+- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains[0] }}
+  when: use_letsencrypt_cert
+
 - yum: name={{ item }} state=present
   with_items:
     - letsencrypt
@@ -14,7 +17,7 @@
 - file: path=/etc/letsencrypt state=directory owner=root group=root mode=0755
 
 # jinja2 template so we can have a dynamic admin email address
-- template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/client.ini owner=root group=root mode=0640
+- template: src=letsencrypt.ini.j2 dest={{ letsencrypt_ini_path }} owner=root group=root mode=0640
 
 - name: check if host already has a letsencrypt cert
   stat: path=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem
@@ -22,7 +25,7 @@
   register: letsencrypt_hostcert
 
 - name: generate letsencrypt host cert
-  shell: letsencrypt certonly --config /etc/letsencrypt/client.ini {{ letsencrypt_host_domains | join('-d ') }}
+  shell: letsencrypt certonly --config {{ letsencrypt_ini_path }} -d {{ letsencrypt_host_domains | join(' -d ') }}
   when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
 
 
