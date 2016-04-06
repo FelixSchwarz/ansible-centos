@@ -36,7 +36,7 @@
 
 # these utilities might include packages from EPEL so it is important that
 # "epel-release" was installed before (see "base packages" above)
-- name: system utilities
+- name: install system utilities
   yum: name={{ item }} state=present
   with_items:
     - ack
