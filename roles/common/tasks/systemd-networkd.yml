@@ -41,3 +41,6 @@
   # (btw not using the old init script saves about 5-10 MB RAM)
   service: name=network    enabled=false
 
+- name: ensure that firewalld applies to eth0
+  shell: /usr/bin/firewall-cmd --permanent --zone=public --add-interface=eth0
+
