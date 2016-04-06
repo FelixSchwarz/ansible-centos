@@ -20,9 +20,6 @@
 - name: configure networkd
   copy: src=host_files/{{ inventory_hostname }}/10-eth0.network dest=/etc/systemd/network/10-eth0.network
 
-- name: stop NetworkManager
-  service: name=NetworkManager    state=stopped enabled=false
-
 - name: remove NetworkManager
   yum: name={{ item }} state=absent
   with_items:
