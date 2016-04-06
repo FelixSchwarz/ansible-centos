@@ -1,0 +1,25 @@
+---
+
+- set_fact: borg_reponame={{ item.borg_reponame }}
+- set_fact: borg_client_key={{ item.borg_client_key }}
+
+- file: path={{ borg_repo_basedir }}/{{ borg_reponame }} state=directory owner=borg group=borg mode=0700
+
+# This handles changing keys at the expense that we allow only one key per borg
+# repo. However that is actually the intended configuration and for exceptional
+# cases like emergency restores (from a different computer) we can easily modify
+# the file manually (or allow unrestricted borg access for another key).
+- name: remove all access to specific borg repo for other keys
+  lineinfile:
+    dest: "{{ borg_repo_basedir }}/.ssh/authorized_keys"
+    # (?!...) means "negative lookahead" which means "NOT ..."
+    regexp: '{{ borg_repo_basedir }}/{{ borg_reponame }}.+(?!{{ borg_client_key | regex_escape() }})$'
+    state: absent
+
+- name: allow client access to specific borg repo
+  lineinfile:
+    dest: "{{ borg_repo_basedir }}/.ssh/authorized_keys"
+    regexp: '{{ borg_repo_basedir }}/{{ borg_reponame }}.+{{ borg_client_key | regex_escape() }}$'
+    line: 'command="borg serve --restrict-to-path {{ borg_repo_basedir }}/{{ borg_reponame }}",no-pty,no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-user-rc {{ borg_client_key }}'
+    state: present
+

@@ -1,0 +1,57 @@
+---
+
+- name: install borgbackup
+  yum: name={{ item }} state=present
+  with_items:
+    - borgbackup
+
+- user: >
+    name=borg
+    state=present
+    shell=/bin/bash
+    home={{ borg_repo_basedir }}
+    createhome=no
+
+- file: >
+    path={{ borg_repo_basedir }}
+    state=directory
+    owner=borg group=borg
+    mode=0700
+    setype=user_home_dir_t
+
+#,--- enable key-based SSH authentication (SElinux might be active) ------------
+- file: >
+    path={{ borg_repo_basedir }}/.ssh
+    state=directory
+    owner=borg group=borg
+    mode=0700
+    setype=ssh_home_t
+
+# ensure that .ssh/authorized_keys exists with the right permissions.
+# unfortunately ansible's file module has no way to ensure a given file is present
+# without caring about its contents.
+# - lineinfile could create the file but it won't set the right permissions
+# - touch will always run, so ansible will report executed actions even though
+#       there was no (meaningful) change
+# - copy (with empty content) might truncate an existing file
+# See https://github.com/ansible/ansible/issues/7490 for an upstream discussion
+# (ticket is closed without any official resolution)
+- name: check if authorized_keys is present already
+  stat: path={{ borg_repo_basedir }}/.ssh/authorized_keys
+  register: borg_authorized_keys
+
+- file: >
+    path={{ borg_repo_basedir }}/.ssh/authorized_keys
+    state=touch
+    owner=borg group=borg
+    mode=0600
+    setype=ssh_home_t
+  when: not borg_authorized_keys.stat.exists
+#`--- SSH keys -----------------------------------------------------------------
+
+- include: borgrepo.yml
+  with_items: borg_accounts
+  # "when" is important to filter "no accounts defined"
+  when: borg_accounts
+
+
