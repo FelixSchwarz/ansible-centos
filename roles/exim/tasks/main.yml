@@ -71,9 +71,11 @@
 # ability to use self-signed keys without changing the exim configuration
 - file: path=/etc/exim/tls state=directory owner=exim group=mail mode=0750
 
-- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem dest=/etc/exim/tls/fullchain.pem state=link
+- name: link to fullchain.pem
+  file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem dest=/etc/exim/tls/fullchain.pem state=link
   when: use_letsencrypt_cert
-- file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/privkey.pem dest=/etc/exim/tls/privkey.pem state=link
+- name: link to privkey.pem
+  file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/privkey.pem dest=/etc/exim/tls/privkey.pem state=link
   when: use_letsencrypt_cert
 
 # force=yes because Exim generates these certificates on its first startup so
@@ -93,7 +95,12 @@
 # letsencrypt 0.5 should add shell hooks so we could modify filesystem
 # ownership/permissions as necessary. Until then we just open up
 # /etc/letsencrypt/archive for exim which gives exim access to all certificates.
-- file: path=/etc/letsencrypt/archive state=directory owner=root group=exim mode=0750
+- name: allow exim access to letsencrypt/archive
+  file: path=/etc/letsencrypt/archive state=directory owner=root group=exim mode=0750
+  when: use_letsencrypt_cert
+
+- name: allow exim access to letsencrypt/live
+  file: path=/etc/letsencrypt/live state=directory owner=root group=exim mode=0750
   when: use_letsencrypt_cert
 #` --- letsencrypt --------------------------------------------------------------
 
