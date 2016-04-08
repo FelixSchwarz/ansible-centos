@@ -2,10 +2,18 @@
 
 driver = sqlite
 connect = /srv/mail/userdb.sqlite
+default_pass_scheme = MD5
 
 password_query = SELECT local_part AS username, domain, password \
   FROM users WHERE local_part = '%n' AND domain = '%d'
 
-# For using doveadm -A:
+# Query to get a list of all usernames.
 iterate_query = SELECT local_part AS username, domain FROM users
+
+# prevent dovecot warning:
+# > auth: Warning: sql: Ignoring changed iterate_query in /etc/dovecot/dovecot-sql.conf.ext,
+# > because userdb sql not used. (If this is intentional, set userdb_warning_disable=yes)
+# It is intentional because a static userdb works for me. Still the list from of
+# sqlite should be the "authoritative" source.
+userdb_warning_disable = yes
 

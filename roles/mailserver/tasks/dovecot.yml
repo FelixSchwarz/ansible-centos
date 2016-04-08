@@ -5,9 +5,14 @@
     - dovecot
     - dovecot-pigeonhole # sieve functionality
 
-- copy: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf owner=root group=root mode=0640
-- copy: src=dovecot/dovecot-sql.conf.ext dest=/etc/dovecot/dovecot-sql.conf.ext owner=root group=root mode=0644
-- copy: src={{ item }} dest=/etc/dovecot/conf.d/ owner=root group=root mode=0640
+# dovecot files need to be readable for group "mail" because the dovecot-lda is
+# run by exim as "mail" user.
+- name: copy dovecot.conf
+  copy: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf owner=root group=mail mode=0640
+- name: copy dovecot-sql.conf.ext
+  copy: src=dovecot/dovecot-sql.conf.ext dest=/etc/dovecot/dovecot-sql.conf.ext owner=root group=mail mode=0644
+- name: copy dovecot/conf.d
+  copy: src={{ item }} dest=/etc/dovecot/conf.d/ owner=root group=mail mode=0640
   with_fileglob:
     - dovecot/conf.d/*.conf
   no_log: True

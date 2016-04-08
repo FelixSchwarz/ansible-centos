@@ -7,7 +7,8 @@
       state: directory
       owner: root
       group: mail
-      mode:  0750
+      # dovecot-lda runs with group "mail" and it needs to store message there
+      mode:  0770
 
 - include: userdb.yml
 
