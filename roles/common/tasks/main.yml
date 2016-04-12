@@ -46,10 +46,13 @@
     - iotop
     - logrotate
     - mtr
+    # for "netstat"
+    - net-tools
     - nano
     - rsync
     - screen
     - sudo
+    - telnet
     - tcpdump
     - wget
 
