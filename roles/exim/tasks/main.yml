@@ -68,8 +68,15 @@
   file:
       path: /etc/exim/dkim
       state: directory
+      # be careful to set ownership/permissions correctly. Exim's "exists{}"
+      # condition will just return "false" without hinting at a permission
+      # problem so DKIM signing might be disabled accidentally.
+      # I spent some hours debugging this until I found that the "dkim" directory
+      # must use the group "exim" and not "mail". Even though the exim user
+      # belongs to the "mail" group the running exim instance doesn't assume
+      # these privileges.
       owner: root
-      group: mail
+      group: exim
       mode:  0750
 
 
