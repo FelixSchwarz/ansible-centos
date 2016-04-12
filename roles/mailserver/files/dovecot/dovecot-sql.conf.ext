@@ -5,10 +5,10 @@ connect = /srv/mail/userdb.sqlite
 default_pass_scheme = MD5
 
 password_query = SELECT local_part AS username, domain, password \
-  FROM users WHERE local_part = '%n' AND domain = '%d'
+  FROM users WHERE local_part = '%n' AND domain = '%d' AND is_enabled=1
 
 # Query to get a list of all usernames.
-iterate_query = SELECT local_part AS username, domain FROM users
+iterate_query = SELECT local_part AS username, domain FROM users WHERE is_enabled=1
 
 # prevent dovecot warning:
 # > auth: Warning: sql: Ignoring changed iterate_query in /etc/dovecot/dovecot-sql.conf.ext,

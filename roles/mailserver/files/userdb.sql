@@ -4,6 +4,7 @@ CREATE TABLE aliases(
     domain varchar(200) NOT NULL,
     target_address varchar(200) NOT NULL,
     memo TEXT,
+    is_enabled INTEGER DEFAULT 1 NOT NULL,
     unique ('local_part', 'domain')
 );
 
@@ -13,6 +14,7 @@ CREATE TABLE users(
     domain varchar(200) NOT NULL,
     password varchar(200) NOT NULL,
     memo TEXT,
+    is_enabled INTEGER DEFAULT 1 NOT NULL,
     unique ('local_part', 'domain')
 );
 
