@@ -27,8 +27,8 @@
 
 - cron:
     name: "run borg backup"
-    minute: "11"
-    hour: "2"
+    hour: "{{ borg_schedule_hour | default(2) }}"
+    minute: "{{ borg_schedule_minute | default(10) }}"
     job: "/usr/local/bin/run-borg-backup.sh"
 
 
