@@ -1,0 +1,6 @@
+#!/bin/sh
+
+exec /usr/local/bin/borgwrapper.sh {{ borg_sshsource }} {{ borg_target }} \
+    '{{ borg_prescript }}' '{{ borg_postscript }}' \
+    {{ borg_sources | join(' ') }}
+
