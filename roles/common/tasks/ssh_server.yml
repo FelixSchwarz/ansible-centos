@@ -1,12 +1,11 @@
 ---
 
 - name: SSH Keys
-  authorized_key: user=root key="{{ item }}" exclusive=True
-  with_items:
-    - "{{ ssh_root_keys }}"
-    - "{{ ssh_root_keys_for_group | default([]) }}"
+  authorized_key: >
+    user=root
+    exclusive=True
+    key="{{ (ssh_root_keys + ssh_root_keys_for_group | default([])) | join('\n') }}"
   tags: ssh_keys
-  no_log: True
 
 - group: name=sftponly
 
