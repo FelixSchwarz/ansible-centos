@@ -19,4 +19,4 @@ ansible-playbook \
 	--force-handlers \
 	--inventory hosts \
 	site.yml \
-	$@
+	"$@"
