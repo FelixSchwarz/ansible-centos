@@ -41,6 +41,8 @@
   with_items:
     - ack
     - bash-completion
+    # for "dig"
+    - bind-utils
     - htop
     - iftop
     - iotop
