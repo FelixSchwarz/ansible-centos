@@ -54,7 +54,7 @@ export BORG_RELOCATED_REPO_ACCESS_IS_OK=yes
 #  at the top of the script.)
 # using "${@:...}" actually escapes arguments containing spaces correctly but
 # we must not store that in a simple variable (otherwise the magic is lost)
-borg create --stats \
+borg create \
     --compression=lzma,6 ${BORGREPO}::$(date --iso-8601=seconds) \
     "${@:5}"
     #--exclude-caches was only added past 1.0
