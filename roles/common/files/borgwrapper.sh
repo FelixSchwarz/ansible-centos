@@ -80,7 +80,10 @@ if [ "$CHECK_RESULT" != "0" ]; then
     exit 15
 fi
 
-borg prune --keep-daily=7 --keep-weekly=4 --keep-monthly=4 ${BORGREPO}
+borg prune \
+    --keep-hourly=4 --keep-daily=14 --keep-weekly=12 --keep-monthly=6 \
+    --stats \
+    ${BORGREPO}
 
 if [ -n "$POST_SCRIPT" ]; then
     ${POST_SCRIPT}
