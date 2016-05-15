@@ -1,17 +1,22 @@
 ---
 
-- copy: >
+- name: set limits for nginx
+  copy: >
     src=nginx.limits.conf
     dest=/etc/security/limits.d
     mode=0400 owner=root group=root
 
-- name: packages
+- name: install nginx
   yum: name="{{ item }}" state=present
   with_items:
     - nginx
 
-- file: state=directory dest=/etc/nginx/vhosts.d owner=root mode=0751
-- copy: >
+- name: create nginx/vhosts.d
+  # mode=0751 -- users are able to read their nginx vhost file but can not see which other domains are present
+  file: state=directory dest=/etc/nginx/vhosts.d owner=root mode=0751
+
+- name: add custom settings for vhosts/performance
+  copy: >
     src={{item}}
     dest=/etc/nginx/conf.d/
     owner=root mode=0444
@@ -20,7 +25,7 @@
     - vhosts.conf
     - performance.conf
 
-- name: service
+- name: enable nginx
   service: name=nginx enabled=true
 
 - firewalld: >
@@ -30,3 +35,4 @@
     immediate=true
 
 - meta: flush_handlers
+
