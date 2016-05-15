@@ -20,12 +20,14 @@
     src={{item}}
     dest=/etc/nginx/conf.d/
     owner=root mode=0444
-  notify: reload nginx
+  notify: restart nginx
   with_items:
     - vhosts.conf
     - performance.conf
 
 - name: enable nginx
+  # "notify: restart nginx" will take care of starting nginx
+  # (and handle config changes with ansible, not just the initial install)
   service: name=nginx enabled=true
 
 - name: allow HTTP(S) in the firewall

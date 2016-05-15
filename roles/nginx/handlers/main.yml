@@ -1,5 +1,7 @@
 ---
 
 - include: ../../common/handlers/main.yml
-- name: reload nginx
+
+- name: restart nginx
+  # nginx needs to be restarted really. reload will not discover new files.
   service: name=nginx state=restarted
