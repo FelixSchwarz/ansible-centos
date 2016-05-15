@@ -10,7 +10,7 @@
   with_items:
     - nginx
 
-- file: state=directory dest=/etc/nginx/vhosts.d owner=root mode=444
+- file: state=directory dest=/etc/nginx/vhosts.d owner=root mode=0751
 - copy: >
     src={{item}}
     dest=/etc/nginx/conf.d/
