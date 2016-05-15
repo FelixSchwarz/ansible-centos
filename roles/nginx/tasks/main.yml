@@ -3,7 +3,7 @@
 - copy: >
     src=nginx.limits.conf
     dest=/etc/security/limits.d
-    mode=400 owner=root group=root
+    mode=0400 owner=root group=root
 
 - name: packages
   yum: name="{{ item }}" state=present
@@ -14,7 +14,7 @@
 - copy: >
     src={{item}}
     dest=/etc/nginx/conf.d/
-    owner=root mode=444
+    owner=root mode=0444
   notify: reload nginx
   with_items:
     - vhosts.conf
