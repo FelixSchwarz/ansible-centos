@@ -28,11 +28,11 @@
 - name: enable nginx
   service: name=nginx enabled=true
 
-- firewalld: >
-    service=http
-    state=enabled
-    permanent=true
-    immediate=true
+- name: allow HTTP(S) in the firewall
+  firewalld: port={{ item }}/tcp immediate=true permanent=true state=enabled
+  with_items:
+    - 80
+    - 443
 
 - meta: flush_handlers
 
