@@ -20,8 +20,6 @@
     - vhosts.conf
     - performance.conf
 
-- file: state=directory dest=/var/cache/nginx owner=nginx mode=700
-
 - name: service
   service: name=nginx enabled=true
 
