@@ -24,7 +24,7 @@
 - name: Start sshd
   service: name=sshd state=started enabled=true
 
-- firewalld: port=22/tcp permanent=true state=enabled
+- firewalld: port=22/tcp immediate=true permanent=true state=enabled
 
 - meta: flush_handlers
 

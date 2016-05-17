@@ -35,10 +35,10 @@
 - name: enable dovecot
   service: name=dovecot state=started enabled=true
 
-- firewalld: port=993/tcp permanent=true state=enabled
-- firewalld: port=995/tcp permanent=true state=enabled
+- firewalld: port=993/tcp immediate=true permanent=true state=enabled
+- firewalld: port=995/tcp immediate=true permanent=true state=enabled
 
 # block unencrypted pop3/imap by default
-- firewalld: port=110/tcp permanent=true state=disabled
-- firewalld: port=143/tcp permanent=true state=disabled
+- firewalld: port=110/tcp immediate=true permanent=true state=disabled
+- firewalld: port=143/tcp immediate=true permanent=true state=disabled
 
