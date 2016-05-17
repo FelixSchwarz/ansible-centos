@@ -55,55 +55,5 @@
 
 # `--- prepare webroot-based authentication ------------------------------------
 
-- name: check if host already has a letsencrypt cert
-  stat: path=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem
-  when: use_letsencrypt_cert
-  register: letsencrypt_hostcert
-
-# There is a bit of a "gotcha" here: The webserver needs a certificate when its
-# configured+started by ansible (so we don't have to resort to complicated
-# config changes depending on the letsencrypt change). Using a web server also
-# means we need to use the "webroot" authenticator - which isn't possible
-# without a running webserver...
-#
-# So we check first if a webserver is running on port 80. If it is just use
-# the "webroot" authentication method (assumes the server is configured to use
-# our global "/srv/letsencrypt/acme-challenge" directory).
-# Otherwise use the "standalone" authenticator and patch the renewal settings
-# (in /etc/letsencrypt/renewal/....conf) dynamically in the webserver role.
-
-- name: Check if webserver is running on port 80
-  # we pipe through "cat" at the end because grep will set its exit code to "1"
-  # if no input matched (leading to a ansible task error). cat will just return
-  # exit code 0 in all cases.
-  shell: /usr/bin/netstat -tulpen | grep ":80 " | cat
-  register: listening_services_for_http
-
-# unfortunately I was unable to test for the length of stdout_lines (likely due
-# to one of the various jinja2 limitations and/or my own stupidity so just
-# compare to empty list explicitly ("[]").
-- set_fact:
-    is_http_server_running: "{{ (listening_services_for_http.stdout_lines == []) | ternary('false', 'true') }}"
-
-- set_fact:
-    letsencrypt_authenticator: "{{ (is_http_server_running and (not standalone_authenticator_only)) | ternary('webroot', 'standalone') }}"
-
-- name: generate letsencrypt host cert
-  shell: letsencrypt certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ letsencrypt_host_domains | join(' -d ') }}
-  when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
-
-
-- name: change letsencrypt authenticator settings to webroot
-  lineinfile: >
-    dest="/etc/letsencrypt/renewal/{{ hostname_letsencrypt }}.conf"
-    regexp="^authenticator\s*=\s*.+"
-    line="authenticator = webroot"
-  when: use_letsencrypt_cert and (not is_http_server_running) and (not standalone_authenticator_only)
-
-- name: change letsencrypt authenticator settings to webroot
-  lineinfile: >
-    dest="/etc/letsencrypt/renewal/{{ hostname_letsencrypt }}.conf"
-    regexp="^webroot_path\s*=\s*.+"
-    line="webroot_path = /srv/letsencrypt/fake-webroot"
-  when: use_letsencrypt_cert and (not is_http_server_running) and (not standalone_authenticator_only)
+- include: fetch_certificate.yml
 
