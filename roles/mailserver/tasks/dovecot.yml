@@ -31,6 +31,19 @@
 - file: src=/etc/pki/dovecot/private/dovecot.pem dest=/etc/dovecot/tls/privkey.pem state=link
   when: not use_letsencrypt_cert
 
+# ,--- renew support for dovecot -----------------------------------------------
+- name: check if letsencrypt/renew.d is present
+  stat: path=/etc/letsencrypt/renew.d/
+  register: letsencrypt_renewd
+
+- name: install dovecot hook when certificates are installed
+  copy:
+    src=letsencrypt-renew.sh
+    dest=/etc/letsencrypt/renew.d/dovecot.sh
+    owner=root group=root
+    mode=0755
+  when: letsencrypt_renewd.stat.exists
+# `--- renew support for dovecot -----------------------------------------------
 
 - name: enable dovecot
   service: name=dovecot state=started enabled=true
