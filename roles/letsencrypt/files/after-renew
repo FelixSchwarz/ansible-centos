@@ -1,0 +1,7 @@
+#!/bin/sh
+
+RENEWDIR=/etc/letsencrypt/renew.d
+for FILE in $(ls $RENEWDIR); do
+    $RENEWDIR/$FILE
+done
+

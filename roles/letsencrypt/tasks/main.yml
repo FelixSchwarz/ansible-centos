@@ -23,6 +23,17 @@
 - name: generate client.ini
   template: src=letsencrypt.ini.j2 dest={{ letsencrypt_ini_path }} owner=root group=root mode=0640
 
+- name: create directory for "on renew" scripts
+  file: path=/etc/letsencrypt/renew.d state=directory mode=0700
+
+- name: copy "after-new" master script
+  copy:  >
+    src=after-renew
+    dest=/etc/letsencrypt/after-renew
+    owner=root group=root
+    mode=0755
+
+
 # ,--- prepare webroot-based authentication ------------------------------------
 - name: create /srv/letsencrypt
   file: path=/srv/letsencrypt state=directory mode=0755
