@@ -1,7 +1,13 @@
 ---
+# create a certificate from let's encrypt
+# vars:
+#   domains
+
+- set_fact:
+    primary_domain: "{{ domains | first }}"
 
 - name: check if host already has a letsencrypt cert
-  stat: path=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem
+  stat: path=/etc/letsencrypt/live/{{ primary_domain }}/fullchain.pem
   when: use_letsencrypt_cert
   register: letsencrypt_hostcert
 
@@ -35,7 +41,7 @@
 
 - name: generate letsencrypt host cert
   # use "--test-cert" for testing ansible rules
-  shell: letsencrypt certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ letsencrypt_host_domains | join(' -d ') }}
+  shell: letsencrypt certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ domains | join(' -d ') }}
   when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
 
 
@@ -43,23 +49,23 @@
 # authenticator
 - name: change letsencrypt authenticator settings to webroot
   lineinfile: >
-    dest="/etc/letsencrypt/renewal/{{ hostname_letsencrypt }}.conf"
+    dest="/etc/letsencrypt/renewal/{{ primary_domain }}.conf"
     regexp="^authenticator\s*=\s*.+"
     line="authenticator = webroot"
   when: use_letsencrypt_cert and (not standalone_authenticator_only)
 
 - name: change letsencrypt authenticator settings to webroot
   lineinfile: >
-    dest="/etc/letsencrypt/renewal/{{ hostname_letsencrypt }}.conf"
+    dest="/etc/letsencrypt/renewal/{{ primary_domain }}.conf"
     regexp="^webroot_path\s*=\s*.+"
     line="webroot_path = /srv/letsencrypt/fake-webroot,"
   when: use_letsencrypt_cert and (not standalone_authenticator_only)
 
 - name: add webroot map for letsencrypt renewals
   lineinfile: >
-    dest="/etc/letsencrypt/renewal/{{ hostname_letsencrypt }}.conf"
+    dest="/etc/letsencrypt/renewal/{{ primary_domain }}.conf"
     insertafter="[[webroot_map]]"
     line="{{ item }} = /srv/letsencrypt/fake-webroot"
-  with_items: "{{ letsencrypt_host_domains }}"
+  with_items: "{{ domains }}"
   when: use_letsencrypt_cert and (not standalone_authenticator_only)
 

@@ -52,8 +52,10 @@
 # information - in the end they are transmitted with plain HTTP anyway...
 - name: create fake-webroot/.well-known/acme-challenge
   file: path=/srv/letsencrypt/fake-webroot/.well-known/acme-challenge state=directory mode=0755
-
 # `--- prepare webroot-based authentication ------------------------------------
 
+
 - include: fetch_certificate.yml
+  vars:
+    domains: "{{ letsencrypt_host_domains }}"
 
