@@ -1,0 +1,67 @@
+# This file is not included in the "regular" nginx role by default but can
+# be included by other roles
+# (I did not want to presume a specific file system layout.)
+#
+# variables:
+#   item
+#     - user
+#     - domain
+# (assumes nginx has user nginx/group nginx)
+
+- set_fact: vhost_username={{ item.user }}
+- set_fact: vhost_domain={{ item.domain }}
+
+# useradd will automatically create this user group
+- set_fact: vhost_usergroup={{ vhost_username }}
+
+- name: create {{ vhost_username }} user
+  user: name="{{ vhost_username }}"
+
+- file: path=/srv/vhosts/ state=directory owner=root group=nginx mode=0751
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}
+    state=directory
+    owner="{{ vhost_username }}" group=nginx
+    mode=0750
+
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}
+    state=directory
+    owner="{{ vhost_username }}" group=nginx
+    mode=0750
+
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/html
+    state=directory
+    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
+    mode=0755
+
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/logs
+    state=directory
+    owner=nginx group="{{ vhost_usergroup }}"
+    mode=0750
+
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/shareddata
+    state=directory
+    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
+    mode=0755
+
+- file: >
+    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/userdata
+    state=directory
+    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
+    mode=0700
+
+- name: add nginx vhost
+  copy:
+    src: host_files/{{ inventory_hostname }}/nginx/{{ vhost_username }}-{{ vhost_domain }}.conf
+    dest: /etc/nginx/vhosts.d/{{ vhost_username }}-{{ vhost_domain }}.conf
+    owner: nginx
+    group: "{{ vhost_usergroup }}"
+    mode: 0640
+  notify: restart nginx
+
+- meta: flush_handlers
+
