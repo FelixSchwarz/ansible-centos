@@ -115,5 +115,25 @@
     line: "root:		{{ admin_emails | join(', ') }}"
     state: present
 
+# at least with letsencrypt we generate certificates using 4096 bit keys so we
+# have to create a custom dhparam.pem to ensure our dhparams are at least
+# equally strong.
+# We don't have to regenerate the DH params periodically as indicated by
+#    http://security.stackexchange.com/a/116502/89584
+- name: check if dhparam4096.pem was already generated
+  stat: path=/etc/pki/tls/dhparam4096.pem
+  register: dhparam
+
+- name: generate stronger DH parameters
+  shell: /usr/bin/openssl dhparam -out /etc/pki/tls/dhparam4096.pem 4096
+  when: not dhparam.stat.exists
+
+- name: ensure dhparam.pem is kept secret
+  file: >
+    path=/etc/pki/tls/dhparam4096.pem
+    state=file
+    owner=root group=root
+    mode=0600
+
 - meta: flush_handlers
 
