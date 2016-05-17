@@ -8,3 +8,10 @@ use_letsencrypt_cert: False
 
 letsencrypt_ini_path: /etc/letsencrypt/client.ini
 
+# If "False" (default) the tasks assume that renewals should use the
+# "webroot" authentication (because the webserver was set up after the first
+# certificate retrieval).
+# Set to "True" to use the "standalone" authenticator forever (because there is
+# no webserver installed).
+standalone_authenticator_only: False
+
