@@ -44,5 +44,19 @@
     owner=root group=root
     mode=0644
 
+# ,--- renew support for nginx -------------------------------------------------
+- name: check if letsencrypt/renew.d is present
+  stat: path=/etc/letsencrypt/renew.d/
+  register: letsencrypt_renewd
+
+- name: install nginx hook when certificates are installed
+  copy:
+    src=letsencrypt-renew.sh
+    dest=/etc/letsencrypt/renew.d/nginx.sh
+    owner=root group=root
+    mode=0755
+  when: letsencrypt_renewd.stat.exists
+# `--- renew support for nginx -------------------------------------------------
+
 - meta: flush_handlers
 
