@@ -6,9 +6,6 @@
 - name: copy yum-cron.conf
   copy: src=yum-cron.conf dest=/etc/yum/yum-cron.conf mode=0644
 
-- name: copy yum-cron.conf
-  copy: src=yum-cron.conf dest=/etc/yum/yum-cron.conf mode=0644
-
 - name: copy yum-daily cronjob
   copy: src=0yum-daily.cron dest=/etc/cron.daily/0yum-daily.cron mode=0755
 
