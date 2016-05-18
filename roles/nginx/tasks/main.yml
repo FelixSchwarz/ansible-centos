@@ -58,5 +58,25 @@
   when: letsencrypt_renewd.stat.exists
 # `--- renew support for nginx -------------------------------------------------
 
+
+- name: create nginx/global.inc.d
+  file: state=directory dest=/etc/nginx/global.include.d owner=root mode=0755
+
+- name: configure global acme challenge location
+  copy:
+    src=global-acme-challenge.conf
+    dest=/etc/nginx/global.include.d/global-acme-challenge.conf
+    owner=root group=root
+    mode=0644
+  notify: restart nginx
+
+- name: use global includes also for the default server
+  copy:
+    src=default-server-global-includes.conf
+    dest=/etc/nginx/default.d/global-includes.conf
+    owner=root group=root
+    mode=0644
+  notify: restart nginx
+
 - meta: flush_handlers
 
