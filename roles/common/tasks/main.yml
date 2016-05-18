@@ -115,6 +115,16 @@
     line: "root:		{{ admin_emails | join(', ') }}"
     state: present
 
+# do not require a tty for root to use sudo
+# If this is not set ansible's "become_user" will fail with
+#   "sudo: sorry, you must have a tty to run sudo"
+- name: tty not required by root to sudo
+  lineinfile: >
+      dest=/etc/sudoers
+      state=present
+      regexp="^Defaults:root"
+      line="Defaults:root !requiretty"
+
 # at least with letsencrypt we generate certificates using 4096 bit keys so we
 # have to create a custom dhparam.pem to ensure our dhparams are at least
 # equally strong.
