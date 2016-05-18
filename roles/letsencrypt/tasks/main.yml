@@ -54,6 +54,12 @@
   file: path=/srv/letsencrypt/fake-webroot/.well-known/acme-challenge state=directory mode=0755
 # `--- prepare webroot-based authentication ------------------------------------
 
+- name: setup renew cron job
+  cron:
+    name: "renew letsencrypt certificates"
+    hour: "07"
+    minute: "48"
+    job: "/usr/bin/letsencrypt renew -c {{ letsencrypt_ini_path }}"
 
 - include: fetch_certificate.yml
   vars:
