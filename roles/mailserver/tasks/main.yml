@@ -13,12 +13,13 @@
 - include: userdb.yml
 
 # open up ports for exim
-- name: allow access to port 25 (tcp)
-  firewalld: port=25/tcp immediate=true permanent=true state=enabled
-- name: allow access to port 465 (tcp)
-  firewalld: port=465/tcp immediate=true permanent=true state=enabled
-- name: allow access to port 587 (tcp)
-  firewalld: port=587/tcp immediate=true permanent=true state=enabled
+- name: allow SMTP ports in the firewall
+  firewalld: port={{ item }}/tcp immediate=true permanent=true state=enabled
+  with_items:
+    - 25
+    - 465
+    - 587
+
 
 - include: dovecot.yml
 
