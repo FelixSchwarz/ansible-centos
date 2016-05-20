@@ -140,12 +140,12 @@
   shell: /usr/bin/openssl dhparam -out /etc/pki/tls/dhparam4096.pem 4096
   when: not dhparam.stat.exists
 
-- name: ensure dhparam.pem is kept secret
+- name: ensure dhparam4096.pem is kept secret
   file: >
     path=/etc/pki/tls/dhparam4096.pem
     state=file
-    owner=root group=root
-    mode=0600
+    owner=root group=mail
+    mode=0640
 
 - meta: flush_handlers
 
