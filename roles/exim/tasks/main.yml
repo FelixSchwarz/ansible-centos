@@ -34,6 +34,17 @@
   copy: src={{ exim_routers_conf_path }}  dest=/etc/exim/routers.conf owner=root group=exim mode=0640
   register: exim_routers_conf
 
+- name: create exim/routers.d
+  file: path=/etc/exim/routers.d state=directory owner=root group=exim mode=0750
+
+- name: copy router definitions from exim/routers.d
+  copy: src={{ item }} dest=/etc/exim/routers.d/ owner=root group=exim mode=0640
+  with_fileglob:
+    - "{{ exim_role }}/routers.d/*.conf"
+    - ../../host_files/{{ inventory_hostname }}/exim-routers.d/*.conf
+  no_log: True
+
+
 - name: copy exim/transports.conf
   copy: src={{ exim_transports_conf_path }}  dest=/etc/exim/transports.conf owner=root group=exim mode=0640
   register: exim_transports_conf
