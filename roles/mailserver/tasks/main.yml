@@ -14,6 +14,12 @@
 
 - include: rspamd.yml
 
+- name: copy exim-helpers.pl
+  copy: >
+    src=exim-helpers.pl
+    dest=/etc/exim/exim-helpers.pl
+    owner=root group=mail mode=0750
+
 # open up ports for exim
 - name: allow SMTP ports in the firewall
   firewalld: port={{ item }}/tcp immediate=true permanent=true state=enabled
