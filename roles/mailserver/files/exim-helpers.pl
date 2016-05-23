@@ -24,17 +24,15 @@ sub assemble_spam_symbol_list {
     return join(', ', @symbols);
 }
 
-my $spam_report = "Action: add header
- Symbol: HFILTER_HELO_IP_A(1.00)
- Symbol: ONCE_RECEIVED(0.10)
-Symbol: R_SPF_FAIL(1.00)
-Symbol: BROKEN_HEADERS(1.00)
-Symbol: HFILTER_HELO_NORES_A_OR_MX(0.30)
-Symbol: MISSING_DATE(1.00)
-Symbol: MISSING_MID(2.50)
+my $_spam_report = 'Action: no action
 Symbol: MIME_GOOD(-0.10)
-Message: (SPF): spf fail
-Message-ID: undef";
+Symbol: R_SPF_ALLOW(-1.50)
+Symbol: R_DKIM_ALLOW(-1.10)
+Symbol: BAYES_HAM(-0.90)
+Symbol: DMARC_POLICY_ALLOW(-0.50)
+Symbol: URIBL_BLOCKED(0.00)
+Message: (SPF): spf allow
+Message-ID: 51ee44a3-a4c7-0c21-1666-a62b8dd154f7@schwarz-online.org';
 
-#print assemble_spam_symbol_list($spam_report);
+#print assemble_spam_symbol_list($_spam_report);
 #print "\n"
