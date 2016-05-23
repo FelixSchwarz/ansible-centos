@@ -26,6 +26,16 @@
   copy: src={{ exim_acls_conf_path }} dest=/etc/exim/acls.conf owner=root group=exim mode=0640
   register: exim_acls_conf
 
+- name: create exim/acls.d
+  file: path=/etc/exim/acls.d state=directory owner=root group=exim mode=0750
+
+- name: copy acl definitions from exim/acls.d
+  copy: src={{ item }} dest=/etc/exim/acls.d/ owner=root group=exim mode=0640
+  with_fileglob:
+    - acls.d/*.conf
+    - ../../host_files/{{ inventory_hostname }}/exim-acls.d/*.conf
+  no_log: True
+
 - name: copy exim/role.conf
   copy: src={{ exim_role_conf_path }} dest=/etc/exim/role.conf owner=root group=exim mode=0640
   register: exim_role_conf
