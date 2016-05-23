@@ -13,7 +13,7 @@ sub assemble_spam_symbol_list {
     my @symbols;
     my @lines = split /\n/, $spam_report;
     foreach my $line (@lines) {
-        if ($line =~ m/Symbol:\s*(\w.*?)\((\d+\.\d+)\)/i) {
+        if ($line =~ m/Symbol:\s*(\S.*?)\((\-?\d+\.\d+)\)/i) {
             if ($INCLUDE_SCORES) {
                 push @symbols, "$1($2)";
             } else {
