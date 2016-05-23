@@ -1,6 +1,6 @@
 ---
 
-- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains[0] }}
+- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains | first }}
   when: use_letsencrypt_cert
 
 - name: install letsencrypt package

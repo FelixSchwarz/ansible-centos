@@ -102,6 +102,9 @@
 
 
 # , --- letsencrypt --------------------------------------------------------------
+- set_fact: hostname_letsencrypt={{ letsencrypt_host_domains | first }}
+  when: use_letsencrypt_cert and hostname_letsencrypt is not defined
+
 # ability to use self-signed keys without changing the exim configuration
 - file: path=/etc/exim/tls state=directory owner=exim group=mail mode=0750
 
