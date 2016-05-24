@@ -4,6 +4,9 @@
   with_items:
     - rspamd
 
+- name: create rspamd/local.d
+  file: path=/etc/rspamd/local.d state=directory owner=root group=root mode=0755
+
 # Using "0" as threshold for BAYES_HAM autolearning seems to be a bit too
 # naive as a message with a good mime structure and no negative identifiers will
 # have -0.3.
