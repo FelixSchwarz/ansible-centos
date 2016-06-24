@@ -41,7 +41,7 @@
 
 - name: generate letsencrypt host cert
   # use "--test-cert" for testing ansible rules
-  shell: letsencrypt certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ domains | join(' -d ') }}
+  shell: certbot certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ domains | join(' -d ') }}
   when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
 
 

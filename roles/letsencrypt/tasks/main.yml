@@ -6,7 +6,7 @@
 - name: install letsencrypt package
   yum: name={{ item }} state=present
   with_items:
-    - letsencrypt
+    - certbot
 
 # needed to for acme challenges
 - name: open port 80 in the firewall
@@ -59,7 +59,7 @@
     name: "renew letsencrypt certificates"
     hour: "07"
     minute: "48"
-    job: "/usr/bin/letsencrypt renew -c {{ letsencrypt_ini_path }}"
+    job: "/usr/bin/certbot renew -c {{ letsencrypt_ini_path }}"
 
 - include: fetch_certificate.yml
   vars:
