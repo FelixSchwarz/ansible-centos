@@ -2,7 +2,7 @@
 
 use strict;
 
-my $INCLUDE_SCORES = 0;
+my $INCLUDE_SCORES = 1;
 
 # Exim's "$spam_report" variable is not that useful when
 # using rspamd (see below for an example.
