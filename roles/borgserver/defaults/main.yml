@@ -1,6 +1,6 @@
 ---
 
-borg_repo_basedir: /srv/backups
+borg_repo_basedir: /srv/backups/server
 
 # no borg accounts defined by default (code checks for "borg_accounts == None"
 # so we don't have to try defining an empty list)
