@@ -54,12 +54,22 @@
   file: path=/srv/letsencrypt/fake-webroot/.well-known/acme-challenge state=directory mode=0755
 # `--- prepare webroot-based authentication ------------------------------------
 
+# unfortunately certbot echoes quite a bit of text to stdout every time it
+# runs (even if no change occurred). This script filters the output so I only
+# get emails after successful renewals.
+- name: copy "letsencrypt-renew.sh" script
+  copy:  >
+    src=letsencrypt-renew.sh
+    dest=/usr/local/bin/letsencrypt-renew.sh
+    owner=root group=root
+    mode=0755
+
 - name: setup renew cron job
   cron:
     name: "renew letsencrypt certificates"
     hour: "07"
     minute: "48"
-    job: "/usr/bin/certbot renew -c {{ letsencrypt_ini_path }}"
+    job: "/usr/local/bin/letsencrypt-renew.sh -c {{ letsencrypt_ini_path }}"
 
 - include: fetch_certificate.yml
   vars:
