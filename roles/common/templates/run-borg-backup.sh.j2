@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# use local SSH key even if this script is run manually via SSH
+unset SSH_AUTH_SOCK
+
 /usr/local/bin/borgwrapper.sh {{ borg_sshsource }} {{ borg_target }} \
     '{{ borg_prescript }}' '{{ borg_postscript }}' \
     {{ borg_sources | join(' ') }} \
