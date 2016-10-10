@@ -1,6 +1,7 @@
 #!/bin/sh
 
-exec /usr/local/bin/borgwrapper.sh {{ borg_sshsource }} {{ borg_target }} \
+/usr/local/bin/borgwrapper.sh {{ borg_sshsource }} {{ borg_target }} \
     '{{ borg_prescript }}' '{{ borg_postscript }}' \
-    {{ borg_sources | join(' ') }}
+    {{ borg_sources | join(' ') }} \
+    2>&1 | grep -v 'Remote: Checking ' | sed 's/[ \t]*$//' | grep -v 'Remote:$'
 
