@@ -18,7 +18,15 @@
   file: path=/etc/systemd/network state=directory
 
 - name: configure networkd
-  copy: src=host_files/{{ inventory_hostname }}/10-eth0.network dest=/etc/systemd/network/10-eth0.network
+  copy: src=host_files/{{ inventory_hostname }}/10-eth0.network dest="/etc/systemd/network/10-{{ eth_device }}.network"
+
+- name:
+  lineinfile: >
+    dest="/etc/systemd/network/10-{{ eth_device }}.network"
+    insertafter="[Match]"
+    regexp="^Name="
+    line="Name={{ eth_device }}"
+    state=present
 
 - name: remove NetworkManager
   yum: name={{ item }} state=absent
@@ -38,6 +46,6 @@
   # (btw not using the old init script saves about 5-10 MB RAM)
   service: name=network    enabled=false
 
-- name: ensure that firewalld applies to eth0
-  shell: /usr/bin/firewall-cmd --permanent --zone=public --add-interface=eth0
+- name: ensure that firewalld applies to eth device
+  shell: /usr/bin/firewall-cmd --permanent --zone=public --add-interface={{ eth_device }}
 

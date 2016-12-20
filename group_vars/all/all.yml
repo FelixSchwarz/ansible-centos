@@ -6,3 +6,5 @@ ssh_root_keys:
 admin_emails:
   - admin@devnull.example
 
+eth_device: eth0
+
