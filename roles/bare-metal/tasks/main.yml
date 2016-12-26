@@ -1,0 +1,51 @@
+---
+##### This role is applicable to all *bare metal* machines
+##### and contains tasks that deal with hard disk monitoring
+##### and such.
+
+- name: bare metal packages
+  yum: name={{ item }} state=present
+  with_items:
+    - smartmontools
+    - mdadm
+    - hdparm
+
+- stat: path=/etc/mdadm.conf
+  register: mdadm_stat
+
+- name: md RAID conf
+  file: path=/etc/mdadm.conf mode="600" state=touch
+  when: not mdadm_stat.stat.exists
+
+- name: md RAID email notifications
+  lineinfile: dest=/etc/mdadm.conf line="MAILADDR root" regexp="^MAILADDR"
+  notify: restart mdmonitor
+
+- name: enable raid scrubbing
+  lineinfile: dest=/etc/sysconfig/raid-check line="CHECK_DEVS=\"{{ RAID_DEVICES }}\"" regexp="^CHECK_DEVS="
+  when: RAID_DEVICES is defined
+
+- name: md RAID service
+  service: name=mdmonitor state=started enabled=true
+
+- name: smartd.conf
+  copy: src=smartd.conf dest=/etc/smartmontools/smartd.conf
+  notify: restart smartd
+
+- name: smartd service
+  service: name=smartd state=started enabled=true
+
+
+- name: check if lvm is installed
+  command: /usr/bin/rpm --quiet -q lvm2
+  register: lvm_installed
+  # do not abort ansible processing if rpm exists with non-zero exit code
+  failed_when: "lvm_installed.rc not in (0, 1)"
+
+- name: enable trim for lvm
+  lineinfile: dest=/etc/lvm/lvm.conf line="\1issue_discards = 1" regexp="^(\s*)issue_discards\s*=\s*" backrefs=yes
+  when: lvm_installed.rc == 0
+
+- name: enable period fstrim timer
+  systemd: name=fstrim.timer state=started enabled=True
+

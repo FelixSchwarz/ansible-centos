@@ -1,0 +1,7 @@
+---
+
+- name: restart mdmonitor
+  service: name=mdmonitor state=restarted
+
+- name: restart smartd
+  service: name=smartd state=restarted
