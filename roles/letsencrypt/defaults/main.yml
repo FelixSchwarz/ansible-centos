@@ -15,3 +15,7 @@ letsencrypt_ini_path: /etc/letsencrypt/client.ini
 # no webserver installed).
 standalone_authenticator_only: False
 
+# This is required because "include: fetch_certificate.yml" in main.yml
+# references "letsencrypt_host_domains" and ansible tries to evaluate that
+# even though the import is not executed if "use_letsencrypt" is False.
+letsencrypt_host_domains: []

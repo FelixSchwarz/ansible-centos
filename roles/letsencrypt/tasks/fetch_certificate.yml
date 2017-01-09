@@ -8,7 +8,6 @@
 
 - name: check if host already has a letsencrypt cert
   stat: path=/etc/letsencrypt/live/{{ primary_domain }}/fullchain.pem
-  when: use_letsencrypt_cert
   register: letsencrypt_hostcert
 
 # There is a bit of a "gotcha" here: The webserver needs a certificate when its
@@ -42,7 +41,7 @@
 - name: generate letsencrypt host cert
   # use "--test-cert" for testing ansible rules
   shell: certbot certonly --{{ letsencrypt_authenticator }} --config {{ letsencrypt_ini_path }} -d {{ domains | join(' -d ') }}
-  when: use_letsencrypt_cert and (letsencrypt_hostcert.stat.exists == False)
+  when: (letsencrypt_hostcert.stat.exists == False)
 
 
 # fixup renewal config in case the initial fetch was done with the standalone
@@ -52,14 +51,14 @@
     dest="/etc/letsencrypt/renewal/{{ primary_domain }}.conf"
     regexp="^authenticator\s*=\s*.+"
     line="authenticator = webroot"
-  when: use_letsencrypt_cert and (not standalone_authenticator_only)
+  when: (not standalone_authenticator_only)
 
 - name: change letsencrypt authenticator settings to webroot
   lineinfile: >
     dest="/etc/letsencrypt/renewal/{{ primary_domain }}.conf"
     regexp="^webroot_path\s*=\s*.+"
     line="webroot_path = /srv/letsencrypt/fake-webroot,"
-  when: use_letsencrypt_cert and (not standalone_authenticator_only)
+  when: (not standalone_authenticator_only)
 
 - name: add webroot map for letsencrypt renewals
   lineinfile: >
@@ -67,5 +66,5 @@
     insertafter="[[webroot_map]]"
     line="{{ item }} = /srv/letsencrypt/fake-webroot"
   with_items: "{{ domains }}"
-  when: use_letsencrypt_cert and (not standalone_authenticator_only)
+  when: (not standalone_authenticator_only)
 

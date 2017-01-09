@@ -11,7 +11,6 @@
 # needed to for acme challenges
 - name: open port 80 in the firewall
   firewalld: port=80/tcp permanent=true immediate=true state=enabled
-  when: use_letsencrypt_cert
 
 # /etc/letsencrypt is owned by the letsencrypt rpm but only created when the
 # program is executed for the first time. I'd like to put the client.ini in
@@ -74,4 +73,5 @@
 - include: fetch_certificate.yml
   vars:
     domains: "{{ letsencrypt_host_domains }}"
+  when: use_letsencrypt_cert
 
