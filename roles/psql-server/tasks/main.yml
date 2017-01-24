@@ -1,0 +1,38 @@
+---
+
+- name: install postgres
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql
+    - postgresql-server
+
+- name: check if postgres is initialized already
+  stat: path=/var/lib/pgsql/data/base
+  register: postgresql_data
+
+- name: initialize postgresql db
+  command: /usr/bin/postgresql-setup initdb
+  when: postgresql_data.stat.exists == False
+
+# The postgres user uses bash as default shell in /etc/passwd.
+# "postgresql-setup" seems to depend on having an actual shell.
+# Having a real shell for "postgres" in itself is not a problem because the
+# user has no password set but still I dislike the setup because it seems too
+# easy opening up the postgres account accidentally.
+# If you need to run some commands with postgres from the command line you
+# can select the shell as "su" parameter:
+#    su - postgres -s /bin/bash
+- name: set shell for postgres user to "/sbin/nologin"
+  user: name=postgres shell=/sbin/nologin
+
+- name: setup pg_hba
+  copy:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0600
+
+- name: enable postgresql-server
+  service: name=postgresql state=started enabled=true
+
