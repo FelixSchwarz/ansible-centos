@@ -121,18 +121,31 @@
 
 
 # copy host-specific configuration files for exim
-- name: copy host-specific configuration files for exim
+- name: check if host-specific exim.local exists as file
+  local_action: stat path=host_files/{{ inventory_hostname }}/exim-local.conf
+  register: exim_local_conf_file
+
+- name: copy host-specific configuration file for exim
+  copy:
+    src: "host_files/{{ inventory_hostname }}/exim-local.conf"
+    dest: /etc/exim/local.conf
+    owner: root
+    group: exim
+    mode: 0640
+  when: exim_local_conf_file.stat.exists
+
+- name: copy host-specific configuration file for exim (from variable)
   copy:
     content: "{{ exim_local_conf }}"
     dest: /etc/exim/local.conf
     owner: root
     group: exim
     mode: 0640
-  when: exim_local_conf is defined
+  when: (exim_local_conf is defined) and (not exim_local_conf_file.stat.exists)
   register: exim_local_conf
 
 - file: path=/etc/exim/local.conf state=absent
-  when: exim_local_conf is not defined
+  when: (exim_local_conf is not defined) and (not exim_local_conf_file.stat.exists)
   register: exim_local_conf
 
 
