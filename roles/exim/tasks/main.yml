@@ -22,6 +22,8 @@
   copy: src=exim.conf dest=/etc/exim/exim.conf owner=root group=exim mode=0640
   register: exim_conf
 
+
+
 - name: copy exim/acls.conf
   copy: src={{ exim_acls_conf_path }} dest=/etc/exim/acls.conf owner=root group=exim mode=0640
   register: exim_acls_conf
@@ -33,12 +35,33 @@
   copy: src={{ item }} dest=/etc/exim/acls.d/ owner=root group=exim mode=0640
   with_fileglob:
     - acls.d/*.conf
-    - ../../host_files/{{ inventory_hostname }}/exim-acls.d/*.conf
   no_log: True
+
+# copy host-specific ACLs if present
+# Unfortunately we can't put the wildcard in the "with_fileglob" (if the
+# host-specific directory is not present) as this would lead to ansible
+# warnings (this used to work with ansible 1.x): "Unable to find ..."
+# Also "with" clauses are executed before evaluating "when" so this can't be
+# used neither.
+# (I assume this is so users can exclude individual items using "when").
+# https://github.com/ansible/ansible/issues/13296#issuecomment-159768329
+# In the end we can only execute a command locally and loop over stdout.
+- name: gather if we have host-specific exim acls
+  # "| cat" which "swallow" a non-zero return code from "ls" (if the directory
+  # is not present at all"
+  local_action: shell ls -1 host_files/{{ inventory_hostname }}/exim-acls.d/*.conf 2>/dev/null | cat
+  register: exim_acls_d
+
+- name: copy host-specifc exim ACLs
+  copy: src={{ item }} dest=/etc/exim/acls.d/ owner=root group=exim mode=0640
+  with_items: "{{ exim_acls_d.stdout_lines }}"
+
 
 - name: copy exim/role.conf
   copy: src={{ exim_role_conf_path }} dest=/etc/exim/role.conf owner=root group=exim mode=0640
   register: exim_role_conf
+
+
 
 - name: copy exim/routers.conf
   copy: src={{ exim_routers_conf_path }}  dest=/etc/exim/routers.conf owner=root group=exim mode=0640
@@ -51,8 +74,17 @@
   copy: src={{ item }} dest=/etc/exim/routers.d/ owner=root group=exim mode=0640
   with_fileglob:
     - "{{ exim_role }}/routers.d/*.conf"
-    - ../../host_files/{{ inventory_hostname }}/exim-routers.d/*.conf
   no_log: True
+
+# see exim_acls_d for more explanantion
+- name: gather if we have host-specific exim routers
+  local_action: shell ls -1 host_files/{{ inventory_hostname }}/exim-routers.d/*.conf 2>/dev/null | cat
+  register: exim_routers_d
+
+- name: copy host-specific router definitions
+  copy: src={{ item }} dest=/etc/exim/routers.d/ owner=root group=exim mode=0640
+  with_items: "{{ exim_routers_d.stdout_lines }}"
+
 
 
 - name: copy exim/transports.conf
@@ -66,8 +98,17 @@
   copy: src={{ item }} dest=/etc/exim/transports.d/ owner=root group=exim mode=0640
   with_fileglob:
     - "{{ exim_role }}/transports.d/*.conf"
-    - ../../host_files/{{ inventory_hostname }}/exim-transports.d/*.conf
   no_log: True
+
+# see exim_acls_d for more explanantion
+- name: gather if we have host-specific exim transports
+  local_action: shell ls -1 host_files/{{ inventory_hostname }}/exim-transports.d/*.conf 2>/dev/null | cat
+  register: exim_transports_d
+
+- name: copy host-specific transport definitions
+  copy: src={{ item }} dest=/etc/exim/transports.d/ owner=root group=exim mode=0640
+  with_items: "{{ exim_transports_d.stdout_lines }}"
+
 
 
 - name: copy exim/rewrite.conf
