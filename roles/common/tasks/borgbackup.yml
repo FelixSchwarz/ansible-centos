@@ -5,7 +5,9 @@
   with_items:
     - borgbackup
 
-- file: path={{ borg_target }} state=directory owner=root group=root mode=0700
+- name: ensure that borg target directory exists
+  file: path={{ borg_target }} state=directory owner=root group=root mode=0700
+  when: borg_target != "n/a"
 
 - name: generate ssh key for root if not present
   user: >
