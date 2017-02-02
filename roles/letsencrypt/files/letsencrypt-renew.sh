@@ -4,5 +4,9 @@
 /usr/bin/certbot renew --quiet $*
 
 # cron "notification" about updated certificates
-find /etc/letsencrypt/live -name 'cert.pem' -type f -follow -mtime -1
+#
+# -mmin -1380: all files modified less than 23 hours (23 * 60 minutes) ago
+# I often saw a duplicated notification on the day after renewal when just
+# using the more common "-mtime -1" ("one day").
+find /etc/letsencrypt/live -name 'cert.pem' -type f -follow -mmin -1380
 
