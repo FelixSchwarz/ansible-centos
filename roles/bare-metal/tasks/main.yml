@@ -49,3 +49,5 @@
 - name: enable period fstrim timer
   systemd: name=fstrim.timer state=started enabled=True
 
+- include: hw-random.yml
+

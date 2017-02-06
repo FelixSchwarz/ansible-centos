@@ -1,0 +1,29 @@
+---
+
+# This enables the hardware random number generator which is present on most(?)
+# modern machines. We can always conditionalize this later if I need to manage
+# a machine without this.
+#
+# Check if the platform has a hwrng:
+# grep rdrand /proc/cpuinfo
+#
+# More info about using it in RHEL7
+# https://www.certdepot.net/rhel7-get-started-random-number-generator/
+
+# libvirt is able to provide also VMs with hw randomness if you add this
+# snippet in the domain XML (rate limiting is optional):
+#   <rng model='virtio'>
+#     <!-- limit VM to fetch at max 1 KB (1024 bits) of entropy per second (1000 milliseconds) -->
+#     <rate bytes='1024' period='1000' />
+#     <backend model='random'>/dev/random</backend>
+#   </rng>
+
+- name: 
+  yum: name={{ item }} state=present
+  with_items:
+    - rng-tools
+
+- name: start rngd service
+  service: name=rngd state=started enabled=true
+
+
