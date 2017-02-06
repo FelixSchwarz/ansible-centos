@@ -8,3 +8,5 @@ admin_emails:
 
 eth_device: eth0
 
+use_hwrng: False
+

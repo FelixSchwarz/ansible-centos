@@ -127,6 +127,9 @@
       regexp="^Defaults:root"
       line="Defaults:root !requiretty"
 
+- include: hw-random.yml
+  when: use_hwrng == True
+
 # at least with letsencrypt we generate certificates using 4096 bit keys so we
 # have to create a custom dhparam.pem to ensure our dhparams are at least
 # equally strong.
