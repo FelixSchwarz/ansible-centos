@@ -78,5 +78,13 @@
     mode=0644
   notify: restart nginx
 
+- name: disable logging for favicon/robots.txt
+  copy:
+    src=global-disable-favicon-logging.conf
+    dest=/etc/nginx/global.include.d/global-disable-favicon-logging.conf
+    owner=root group=root
+    mode=0644
+  notify: restart nginx
+
 - meta: flush_handlers
 
