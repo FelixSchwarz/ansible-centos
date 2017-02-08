@@ -34,6 +34,33 @@
 - name: Disable CentOS extras
   copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
 
+# explicitely setting a custom SSH key is useful for deployments and borg
+# backups
+- name: check if custom ssh key for root exists
+  local_action: stat path=host_files/{{ inventory_hostname }}/sshkey-root
+  register: sshkey_root
+  ignore_errors: True
+
+- name: copy private SSH key for root
+  copy:
+    # This file should be encrypted (requires ansible 2.2+)
+    src: host_files/{{ inventory_hostname }}/sshkey-root
+    dest: /root/.ssh/id_rsa
+    owner: root
+    group: root
+    mode: 0600
+  when: sshkey_root.stat.exists
+
+- name: copy public SSH key for root user
+  copy:
+    src: host_files/{{ inventory_hostname }}/sshkey-root.pub
+    dest: /root/.ssh/id_rsa.pub
+    owner: root
+    group: root
+    mode: 0644
+  when: sshkey_root.stat.exists
+
+
 # these utilities might include packages from EPEL so it is important that
 # "epel-release" was installed before (see "base packages" above)
 - name: install system utilities
