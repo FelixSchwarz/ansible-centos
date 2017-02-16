@@ -14,7 +14,9 @@ sub assemble_spam_symbol_list {
     my @lines = split /\n/, $spam_report;
     foreach my $line (@lines) {
         if ($line =~ m/Symbol:\s*(\S.*?)\((\-?\d+\.\d+)\)/i) {
-            if ($INCLUDE_SCORES) {
+            if ($2 == 0) {
+                # ignore rules without any weight
+            } elsif ($INCLUDE_SCORES) {
                 push @symbols, "$1($2)";
             } else {
                 push @symbols, $1;
