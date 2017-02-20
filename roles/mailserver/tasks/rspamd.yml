@@ -16,6 +16,6 @@
     dest=/etc/rspamd/local.d/statistic.conf
     owner=root mode=0644
 
-- name: enable rspamd.socket
-  service: name=rspamd.socket enabled=true state=started
+- name: enable rspamd.service
+  service: name=rspamd.service enabled=true state=started
 
