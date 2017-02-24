@@ -35,3 +35,14 @@
 - name: enable libvirtd service
   service: name=libvirtd state=started enabled=yes
 
+- name: enable libvirt-guests service
+  service: name=libvirt-guests state=started enabled=yes
+
+# by default libvirt-guests should "suspend" guests but that did not work out
+# for me (February 2017, CentOS 7) so let's just shut them down.
+- name: poweroff guests on shutdown
+  lineinfile:
+    dest: /etc/sysconfig/libvirt-guests
+    line: "ON_SHUTDOWN=shutdown"
+    regexp: "^ON_SHUTDOWN="
+
