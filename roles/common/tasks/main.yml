@@ -177,5 +177,15 @@
     owner=root group=mail
     mode=0640
 
+# even if I usually disable the terminal bell completely I recently found
+# it helpful for notifications after a long-running tasked finished.
+# however the bell on tab-completion is absolutely annoying so just switch
+# it off.
+- name: do not bell on tab-completion
+  lineinfile:
+    dest: /etc/inputrc
+    line: "set bell-style none"
+    regexp: "^set bell-style .*"
+
 - meta: flush_handlers
 
