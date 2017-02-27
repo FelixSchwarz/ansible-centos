@@ -6,3 +6,7 @@ borg_repo_basedir: /srv/backups/server
 # so we don't have to try defining an empty list)
 borg_accounts:
 
+# additional SSH key to authenticate as "borg" user (without restrictions to
+# a specific borg repo)
+borg_ssh_key:
+
