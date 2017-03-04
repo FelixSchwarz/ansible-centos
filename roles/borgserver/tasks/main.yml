@@ -55,6 +55,7 @@
     line: '{{ borg_ssh_key }}'
     state: present
   with_items: borg_ssh_key
+  when: borg_ssh_key
 
 #`--- SSH keys -----------------------------------------------------------------
 
