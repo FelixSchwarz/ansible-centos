@@ -3,6 +3,9 @@
 # --quiet: print only errors
 /usr/bin/certbot renew --quiet $*
 
+# prevent error message if no certificate exists
+[ -e /etc/letsencrypt/live ] || exit 0
+
 # cron "notification" about updated certificates
 #
 # -mmin -1380: all files modified less than 23 hours (23 * 60 minutes) ago
