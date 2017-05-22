@@ -10,3 +10,8 @@ borg_postscript: ""
 # this decision in CentOS 8 as SELinux seems to work fine Fedora 23).
 selinux_mode: disabled
 
+# by default, updates should be applied automatically
+# however some systems are too important so we want to run updates manually.
+# valid values: "yes" / "no"
+system_auto_updates: "yes"
+

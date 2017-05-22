@@ -3,8 +3,11 @@
 - name: install yum-cron
   yum: name=yum-cron state=present
 
-- name: copy yum-cron.conf
-  copy: src=yum-cron.conf dest=/etc/yum/yum-cron.conf mode=0644
+- name: generate yum-cron.conf
+  template:
+    src: yum-cron.conf.j2
+    dest: /etc/yum/yum-cron.conf
+    mode: 0644
 
 - name: enable yum-cron.service
   service: name=yum-cron state=started enabled=true
