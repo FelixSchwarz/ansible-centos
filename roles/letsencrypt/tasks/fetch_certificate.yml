@@ -3,7 +3,8 @@
 # vars:
 #   domains
 
-- set_fact:
+- name: determine primary domain
+  set_fact:
     primary_domain: "{{ domains | first }}"
 
 - name: check if host already has a letsencrypt cert
@@ -32,10 +33,12 @@
 # unfortunately I was unable to test for the length of stdout_lines (likely due
 # to one of the various jinja2 limitations and/or my own stupidity so just
 # compare to empty list explicitly ("[]").
-- set_fact:
+- name: evaluate webserver check
+  set_fact:
     is_http_server_running: "{{ (listening_services_for_http.stdout_lines == []) | ternary('false', 'true') }}"
 
-- set_fact:
+- name: determine which letsencrypt authenticator to use
+  set_fact:
     letsencrypt_authenticator: "{{ (is_http_server_running and (not standalone_authenticator_only)) | ternary('webroot', 'standalone') }}"
 
 - name: generate letsencrypt host cert
