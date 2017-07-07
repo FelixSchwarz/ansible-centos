@@ -1,0 +1,5 @@
+---
+
+# ensure that the install uses a secure password even if the admin forgot to
+# configure a host-specific password,
+mariadb_root_password: 7tIOxvdRuLQCFroIB1Cx

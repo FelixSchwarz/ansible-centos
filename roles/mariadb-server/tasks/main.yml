@@ -1,0 +1,75 @@
+---
+
+- name: install mariadb-server
+  yum: name={{ item }} state=present
+  with_items:
+    - mariadb
+    - mariadb-server
+
+- name: enable mariadb-server
+  service: name=mariadb state=started enabled=true
+
+- set_fact: mariadb_root_password="foobar"
+
+
+# --- setting the root password -----------------------------------------------
+- name: copy "mariadb-set-root-password"
+  copy:
+    src: set-root-password.sh
+    dest: /usr/local/bin/mariadb-set-root-password.sh
+    mode: 0755
+
+- stat: path=/usr/local/mariadb-root-password-was-set
+  register: mariadb_root_password_set
+
+- name: set mariadb root password
+  command: /usr/local/bin/mariadb-set-root-password.sh
+  environment:
+    ROOT_PASSWORD: "{{ mariadb_root_password }}"
+  when: not mariadb_root_password_set.stat.exists
+
+- name: touch "mariadb-root-password-was-set" if it does not exist yet
+  file:
+    path: /usr/local/mariadb-root-password-was-set
+    state: touch
+  when: not mariadb_root_password_set.stat.exists
+
+- name: generate .my.cnf for root
+  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+
+# moved this out of "mariadb-set-root-password.sh" because .my.cnf is generated
+# after that script and mysqladmin will just use what we have generated in the
+# previous task.
+- name: flush mysql privilege tables
+  command: /usr/bin/mysqladmin flush-privileges
+  when: not mariadb_root_password_set.stat.exists
+
+# --- hardening install -------------------------------------------------------
+- name: copy "harden-mariadb-installation.sh"
+  copy:
+    src: harden-mariadb-installation.sh
+    dest: /usr/local/bin/
+    mode: 0755
+
+- stat: path=/usr/local/mariadb-install-was-hardened
+  register: mariadb_install_was_hardened
+
+- name: harden mariadb installation
+  command: /usr/local/bin/harden-mariadb-installation.sh
+  when: not mariadb_install_was_hardened.stat.exists
+
+- name: touch "mariadb-install-was-hardened" if it does not exist yet
+  file:
+    path: /usr/local/mariadb-install-was-hardened
+    state: touch
+  when: not mariadb_install_was_hardened.stat.exists
+
+
+# --- utilities -------------------------------------------------------
+- name: copy "dump-mariadb-databases.sh"
+  copy:
+    src: dump-mariadb-databases.sh
+    dest: /usr/local/bin/
+    mode: 0755
+
+
