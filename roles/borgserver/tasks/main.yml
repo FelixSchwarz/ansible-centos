@@ -49,13 +49,10 @@
   when: not borg_authorized_keys.stat.exists
 
 - name: add borg "master" keys
-  lineinfile:
-    dest: "{{ borg_repo_basedir }}/.ssh/authorized_keys"
-    regexp: '^{{ borg_ssh_key | regex_escape() }}$'
-    line: '{{ borg_ssh_key }}'
+  authorized_key:
+    user: borg
     state: present
-  with_items: borg_ssh_key
-  when: borg_ssh_key
+    key: "{{ borg_ssh_key }}"
 
 #`--- SSH keys -----------------------------------------------------------------
 
