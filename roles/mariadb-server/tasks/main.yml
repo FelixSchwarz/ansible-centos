@@ -9,8 +9,6 @@
 - name: enable mariadb-server
   service: name=mariadb state=started enabled=true
 
-- set_fact: mariadb_root_password="foobar"
-
 
 # --- setting the root password -----------------------------------------------
 - name: copy "mariadb-set-root-password"
