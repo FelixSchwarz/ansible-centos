@@ -55,9 +55,9 @@ export BORG_RELOCATED_REPO_ACCESS_IS_OK=yes
 # using "${@:...}" actually escapes arguments containing spaces correctly but
 # we must not store that in a simple variable (otherwise the magic is lost)
 borg create \
-    --compression=lzma,6 ${BORGREPO}::$(date --iso-8601=seconds) \
+    --exclude-caches \
+    --compression=auto,lzma,6 ${BORGREPO}::$(date --iso-8601=seconds) \
     "${@:5}"
-    #--exclude-caches was only added past 1.0
 BORG_RESULT=$?
 if [ "$BORG_RESULT" != "0" ]; then
     echo "borg exited with error ${BORG_RESULT}"
@@ -82,7 +82,6 @@ fi
 
 borg prune \
     --keep-hourly=4 --keep-daily=14 --keep-weekly=12 --keep-monthly=6 \
-    --stats \
     ${BORGREPO}
 
 if [ -n "$POST_SCRIPT" ]; then
