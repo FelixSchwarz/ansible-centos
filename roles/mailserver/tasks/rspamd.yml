@@ -24,5 +24,11 @@
     dest=/etc/rspamd/local.d/metrics.conf
     owner=root mode=0644
 
+- name: add custom RBL configuration
+  copy: >
+    src=rspamd-rbl.conf
+    dest=/etc/rspamd/local.d/rbl.conf
+    owner=root mode=0644
+
 - name: enable rspamd.service
   service: name=rspamd.service enabled=true state=started
