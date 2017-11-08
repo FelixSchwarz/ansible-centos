@@ -16,6 +16,13 @@
     dest=/etc/rspamd/local.d/statistic.conf
     owner=root mode=0644
 
+# specify a higher threshold for "reject" and possibly also modify scores
+# for some rules.
+- name: add custom thresholds for reject
+  copy: >
+    src=rspamd-metrics.conf
+    dest=/etc/rspamd/local.d/metrics.conf
+    owner=root mode=0644
+
 - name: enable rspamd.service
   service: name=rspamd.service enabled=true state=started
-
