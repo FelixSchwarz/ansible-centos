@@ -5,7 +5,23 @@
     - rspamd
 
 - name: create rspamd/local.d
-  file: path=/etc/rspamd/local.d state=directory owner=root group=root mode=0755
+  file: path=/etc/rspamd/local.d state=directory owner=root group=root mode=0750
+
+
+# add host-specific "worker-controller.inc" if it exists
+- name: check if host-specific "worker-controller.inc" exists
+  local_action: stat path=host_files/{{ inventory_hostname }}/rspamd-worker-controller.inc
+  register: rspamd_worker_controller_file
+
+- name: copy custom configuration for worker-controller.inc
+  copy:
+    src: "host_files/{{ inventory_hostname }}/rspamd-worker-controller.inc"
+    dest: /etc/rspamd/local.d/worker-controller.inc
+    owner: root
+    group: root
+    mode: 0640
+  when: rspamd_worker_controller_file.stat.exists
+
 
 # Using "0" as threshold for BAYES_HAM autolearning seems to be a bit too
 # naive as a message with a good mime structure and no negative identifiers will
