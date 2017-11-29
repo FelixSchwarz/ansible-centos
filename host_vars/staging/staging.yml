@@ -11,15 +11,4 @@ hostname: staging.devnull.example
 # root_password: "kieyie2eathaivoYaega"
 root_password_hash: "$6$VL7rXZjsL.35werO$OkGCg84BZuAv7pWCFfa/nr/s4CocCqn9hwK9Gl65FNaDbBBjn3bSOBdSaLFlqVzIlWx51I8EzshRlx/YdXB0H/"
 
-# I wished ansible would support encrypted files in their "copy" module. However
-# this isn't the case for ansible 2.0 even though the developers are aware of
-# the feature request and will implement this in a future version. Until then
-# define the file contents here as a workaround.
-# required by the "exim-relay" role
-exim_local_conf: |
-  # This file is managed by Ansible. Don't make changes here, they will be overwritten.
-  
-  SMARTHOST_HOSTNAME = mail.devnull.example
-  SMARTHOST_USER = staging@devnull.example
-  SMARTHOST_PASSWORD = secret
 
