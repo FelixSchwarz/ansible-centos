@@ -5,7 +5,7 @@
     - rspamd
 
 - name: create rspamd/local.d
-  file: path=/etc/rspamd/local.d state=directory owner=root group=root mode=0750
+  file: path=/etc/rspamd/local.d state=directory owner=rspamd group=rspamd mode=0750
 
 
 # add host-specific "worker-controller.inc" if it exists
@@ -17,8 +17,8 @@
   copy:
     src: "host_files/{{ inventory_hostname }}/rspamd-worker-controller.inc"
     dest: /etc/rspamd/local.d/worker-controller.inc
-    owner: root
-    group: root
+    owner: rspamd
+    group: rspamd
     mode: 0640
   when: rspamd_worker_controller_file.stat.exists
 
@@ -30,7 +30,7 @@
   copy: >
     src=rspamd-statistic.conf
     dest=/etc/rspamd/local.d/statistic.conf
-    owner=root mode=0644
+    owner=rspamd mode=0644
 
 # specify a higher threshold for "reject" and possibly also modify scores
 # for some rules.
@@ -38,13 +38,13 @@
   copy: >
     src=rspamd-metrics.conf
     dest=/etc/rspamd/local.d/metrics.conf
-    owner=root mode=0644
+    owner=rspamd mode=0644
 
 - name: add custom RBL configuration
   copy: >
     src=rspamd-rbl.conf
     dest=/etc/rspamd/local.d/rbl.conf
-    owner=root mode=0644
+    owner=rspamd mode=0644
 
 - name: enable rspamd.service
   service: name=rspamd.service enabled=true state=started
