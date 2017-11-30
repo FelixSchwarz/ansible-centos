@@ -46,5 +46,14 @@
     dest=/etc/rspamd/local.d/rbl.conf
     owner=rspamd mode=0644
 
+- name: copy rspamd.conf.local
+  copy:
+    src: rspamd.conf.local
+    dest: /etc/rspamd/rspamd.conf.local
+    owner: rspamd
+    group: rspamd
+    mode: 0640
+
 - name: enable rspamd.service
   service: name=rspamd.service enabled=true state=started
+
