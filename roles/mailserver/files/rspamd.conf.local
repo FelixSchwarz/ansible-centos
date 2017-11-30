@@ -26,3 +26,5 @@ metric {
     }
 }
 
+settings = "file://$LOCAL_CONFDIR/local.d/settings.map";
+
