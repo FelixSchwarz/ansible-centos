@@ -53,6 +53,8 @@
     user: borg
     state: present
     key: "{{ borg_ssh_key }}"
+  # when is important to prevent an exception in ansible's "authorized_key" module
+  when: borg_ssh_key
 
 #`--- SSH keys -----------------------------------------------------------------
 
