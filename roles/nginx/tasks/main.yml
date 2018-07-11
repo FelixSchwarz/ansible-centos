@@ -58,6 +58,21 @@
   when: letsencrypt_renewd.stat.exists
 # `--- renew support for nginx -------------------------------------------------
 
+- name: configure "map_hash_bucket_size"
+  copy:
+    src=_bucket_size.conf
+    dest=/etc/nginx/conf.d/_bucket_size.conf
+    owner=root group=root
+    mode=0644
+  notify: restart nginx
+
+- name: define anonymized log format
+  copy:
+    src=anonymized_logging.conf
+    dest=/etc/nginx/conf.d/anonymized_logging.conf
+    owner=root group=root
+    mode=0644
+  notify: restart nginx
 
 - name: create nginx/global.inc.d
   file: state=directory dest=/etc/nginx/global.include.d owner=root mode=0755
