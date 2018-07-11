@@ -1,7 +1,7 @@
 ---
 
 - set_fact: hostname_letsencrypt={{ letsencrypt_host_domains | first }}
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert and letsencrypt_host_domains
 
 - name: install letsencrypt package
   yum: name={{ item }} state=present
@@ -73,5 +73,6 @@
 - include: fetch_certificate.yml
   vars:
     domains: "{{ letsencrypt_host_domains }}"
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert and letsencrypt_host_domains
+
 
