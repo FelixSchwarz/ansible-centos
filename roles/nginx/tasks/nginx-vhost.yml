@@ -11,56 +11,9 @@
 - set_fact: vhost_username={{ item.user }}
 - set_fact: vhost_domain={{ item.domain }}
 
-# useradd will automatically create this user group
-- set_fact: vhost_usergroup={{ vhost_username }}
+- name: setup vhost filesystem for {{ vhost_username }}/{{ vhost_domain }}
+  include: roles/nginx/tasks/nginx-vhost-filesystem.yml
 
-- name: create {{ vhost_username }} user
-  user: name="{{ vhost_username }}"
-
-- name: create /srv/vhosts
-  file: path=/srv/vhosts/ state=directory owner=root group=nginx mode=0751
-
-- name: create user vhost-directory
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}
-    state=directory
-    owner="{{ vhost_username }}" group=nginx
-    mode=0750
-
-- name: create domain-specific directory
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}
-    state=directory
-    owner="{{ vhost_username }}" group=nginx
-    mode=0750
-
-- name: create directory "html"
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/html
-    state=directory
-    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
-    mode=0755
-
-- name: create directory "logs"
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/logs
-    state=directory
-    owner=nginx group="{{ vhost_usergroup }}"
-    mode=0750
-
-- name: create directory "shareddata"
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/shareddata
-    state=directory
-    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
-    mode=0755
-
-- name: create directory "userdata"
-  file: >
-    path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/userdata
-    state=directory
-    owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
-    mode=0700
 
 - name: add nginx vhost
   copy:
