@@ -74,7 +74,7 @@
     mode=0644
   notify: restart nginx
 
-- name: create nginx/global.inc.d
+- name: create nginx/global.include.d
   file: state=directory dest=/etc/nginx/global.include.d owner=root mode=0755
 
 - name: configure global acme challenge location
