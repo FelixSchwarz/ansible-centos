@@ -25,6 +25,15 @@
 - name: set shell for postgres user to "/sbin/nologin"
   user: name=postgres shell=/sbin/nologin
 
+
+# this prevents an ansible (2.6) warning when using (e.g.) postgresql_user:
+# "Module remote_tmp ... did not exist and was created with a mode of 0700, this may cause issues when running as another user."
+- name: create ansible tmp directory for "postgres"
+  file: path=~postgres/.ansible/ state=directory owner=postgres group=postgres mode=0700
+- name: create ansible tmp directory for "postgres"
+  file: path=~postgres/.ansible/tmp state=directory owner=postgres group=postgres mode=0700
+
+
 - name: setup pg_hba
   copy:
     src: pg_hba.conf
