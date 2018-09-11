@@ -36,3 +36,20 @@
 - name: enable postgresql-server
   service: name=postgresql state=started enabled=true
 
+# psql backup
+- name: create /srv/borgtmp
+  file:
+    path: /srv/borgtmp
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: copy psql db backup script
+  copy:
+    src: backup-psql-databases.sh
+    dest: /usr/local/bin/
+    owner: root
+    group: root
+    mode: 0755
+
