@@ -53,3 +53,9 @@
     owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
     mode=0700
 
+- name: create symlink for vhost in /home
+  file:
+    src: ../../srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/
+    dest: "~{{ vhost_username }}/vhost-{{ vhost_domain }}"
+    state: link
+
