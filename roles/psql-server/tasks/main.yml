@@ -51,8 +51,8 @@
     path: /srv/borgtmp
     state: directory
     owner: root
-    group: root
-    mode: 0700
+    group: postgres
+    mode: 0770
 
 - name: copy psql db backup script
   copy:
