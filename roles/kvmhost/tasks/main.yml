@@ -1,15 +1,16 @@
 ---
 
 - name: kvm and libvirt packages
-  yum: name={{ item }} state=present
-  with_items:
-    - libvirt-client
-    - libvirt-daemon
-    - libvirt-daemon-driver-qemu
-    - libvirt-daemon-driver-network
-    - libvirt-daemon-kvm
-    - libvirt-daemon-config-network
-    - libvirt-daemon-driver-interface
+  yum:
+    name:
+      - libvirt-client
+      - libvirt-daemon
+      - libvirt-daemon-driver-qemu
+      - libvirt-daemon-driver-network
+      - libvirt-daemon-kvm
+      - libvirt-daemon-config-network
+      - libvirt-daemon-driver-interface
+    state: present
 
 - name: disable rpcbind service
   service: name=rpcbind state=stopped enabled=no

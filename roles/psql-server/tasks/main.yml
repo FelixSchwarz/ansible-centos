@@ -1,10 +1,11 @@
 ---
 
 - name: install postgres
-  yum: name={{ item }} state=present
-  with_items:
-    - postgresql
-    - postgresql-server
+  yum:
+    name:
+      - postgresql
+      - postgresql-server
+    state: present
 
 - name: check if postgres is initialized already
   stat: path=/var/lib/pgsql/data/base

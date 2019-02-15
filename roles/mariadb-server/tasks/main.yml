@@ -1,10 +1,11 @@
 ---
 
 - name: install mariadb-server
-  yum: name={{ item }} state=present
-  with_items:
-    - mariadb
-    - mariadb-server
+  yum:
+    name:
+      - mariadb
+      - mariadb-server
+    state: present
 
 - name: enable mariadb-server
   service: name=mariadb state=started enabled=true

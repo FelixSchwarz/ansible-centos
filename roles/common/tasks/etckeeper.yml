@@ -1,7 +1,9 @@
 ---
 
 - name: install etckeeper
-  yum: name=etckeeper state=present
+  yum:
+    name: etckeeper
+    state: present
 
 - name: check if etckeeper is initialized already
   stat: path=/etc/.etckeeper

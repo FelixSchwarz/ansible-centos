@@ -64,26 +64,27 @@
 # these utilities might include packages from EPEL so it is important that
 # "epel-release" was installed before (see "base packages" above)
 - name: install system utilities
-  yum: name={{ item }} state=present
-  with_items:
-    - ack
-    - bash-completion
-    # for "dig"
-    - bind-utils
-    - htop
-    - iftop
-    - iotop
-    - logrotate
-    - mtr
-    # for "netstat"
-    - net-tools
-    - nano
-    - rsync
-    - screen
-    - sudo
-    - telnet
-    - tcpdump
-    - wget
+  yum:
+    name:
+      - ack
+      - bash-completion
+      # for "dig"
+      - bind-utils
+      - htop
+      - iftop
+      - iotop
+      - logrotate
+      - mtr
+      # for "netstat"
+      - net-tools
+      - nano
+      - rsync
+      - screen
+      - sudo
+      - telnet
+      - tcpdump
+      - wget
+    state: present
 
 - include: etckeeper.yml
   tags: etckeeper

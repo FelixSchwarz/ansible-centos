@@ -1,9 +1,9 @@
 ---
 
 - name: install borgbackup
-  yum: name={{ item }} state=present
-  with_items:
-    - borgbackup
+  yum:
+    name: borgbackup
+    state: present
 
 - user: >
     name=borg

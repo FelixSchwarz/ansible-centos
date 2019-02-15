@@ -7,10 +7,11 @@
     mode=0400 owner=root group=root
 
 - name: install nginx and logrotate
-  yum: name="{{ item }}" state=present
-  with_items:
-    - nginx
-    - logrotate
+  yum:
+    name:
+      - nginx
+      - logrotate
+    state: present
 
 - name: create nginx/vhosts.d
   # mode=0751 -- users are able to read their nginx vhost file but can not see which other domains are present

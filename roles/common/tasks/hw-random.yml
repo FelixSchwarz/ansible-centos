@@ -22,9 +22,9 @@
 # </devices>
 
 - name: install rng-tools
-  yum: name={{ item }} state=present
-  with_items:
-    - rng-tools
+  yum:
+    name: rng-tools
+    state: present
 
 - name: start rngd service
   service: name=rngd state=started enabled=true

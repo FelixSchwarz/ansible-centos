@@ -1,9 +1,9 @@
 ---
 
 - name: install systemd-resolved
-  yum: name={{ item }} state=present
-  with_items:
-    - systemd-resolved
+  yum:
+    name: systemd-resolved
+    state: present
 
 - name: enable systemd-resolved
   service: name=systemd-resolved    state=started enabled=true

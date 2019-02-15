@@ -2,13 +2,15 @@
 # This role contains plays for hosts using Exim as relay (sending emails via
 # dedicated mail server/"smart host")
 
-- yum: name={{ item }} state=present
-  with_items:
-    - exim
+- name: install exim
+  yum:
+    name: exim
+    state: present
 
-- yum: name={{ item }} state=absent
-  with_items:
-    - postfix
+- name: uninstall postfix
+  yum:
+    name: postfix
+    state: absent
 
 
 # configuration files for exim must not be owned by the Exim runtime user ("exim")

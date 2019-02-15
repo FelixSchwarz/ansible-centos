@@ -4,11 +4,12 @@
 ##### and such.
 
 - name: bare metal packages
-  yum: name={{ item }} state=present
-  with_items:
-    - smartmontools
-    - mdadm
-    - hdparm
+  yum:
+    name:
+      - smartmontools
+      - mdadm
+      - hdparm
+    state: present
 
 - stat: path=/etc/mdadm.conf
   register: mdadm_stat

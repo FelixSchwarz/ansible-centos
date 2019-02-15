@@ -10,9 +10,9 @@
 # - timesyncd (which knows about wait-online, just has an NTP client - less RAM, no accidental reflection attacks possible)
 # - user sessions in logind (no user-specific service management)
 - name: install systemd-networkd
-  yum: name={{ item }} state=present
-  with_items:
-    - systemd-networkd
+  yum:
+    name: systemd-networkd
+    state: present
 
 - name: create /etc/systemd/network
   file: path=/etc/systemd/network state=directory
@@ -29,9 +29,9 @@
     state=present
 
 - name: remove NetworkManager
-  yum: name={{ item }} state=absent
-  with_items:
-    - NetworkManager
+  yum:
+    name: NetworkManager
+    state: absent
 
 - name: enable systemd-networkd
   service: name=systemd-networkd    state=started enabled=true

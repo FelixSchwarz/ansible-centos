@@ -3,10 +3,10 @@
 - set_fact: hostname_letsencrypt={{ letsencrypt_host_domains | first }}
   when: use_letsencrypt_cert and letsencrypt_host_domains
 
-- name: install letsencrypt package
-  yum: name={{ item }} state=present
-  with_items:
-    - certbot
+- name: install certbot package
+  yum:
+    name: certbot
+    state: present
 
 # needed to for acme challenges
 - name: open port 80 in the firewall

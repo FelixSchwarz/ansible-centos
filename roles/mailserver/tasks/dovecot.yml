@@ -1,9 +1,11 @@
 ---
 
-- yum: name={{ item }} state=present
-  with_items:
-    - dovecot
-    - dovecot-pigeonhole # sieve functionality
+- name: install dovecot
+  yum:
+    name:
+      - dovecot
+      - dovecot-pigeonhole # sieve functionality
+    state: present
 
 # dovecot files need to be readable for group "mail" because the dovecot-lda is
 # run by exim as "mail" user.
