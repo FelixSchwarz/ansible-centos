@@ -24,12 +24,13 @@
     state: present
 
 - name: base packages
-  yum: name={{ item }} state=present
-  with_items:
-    # epel-release is included in CentOS extras which is enabled by default
-    - epel-release
-    - firewalld
-    - cronie
+  yum:
+    name:
+      # epel-release is included in CentOS extras which is enabled by default
+      - epel-release
+      - firewalld
+      - cronie
+    state: present
 
 - name: Disable CentOS extras
   copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
@@ -118,15 +119,16 @@
 # This removes a couple of services to save RAM (quite a bit, about 50 MB!)
 # also less running services means reduced attack surface.
 - name: remove packages
-  yum: name={{ item }} state=absent
-  with_items:
-    - tuned             # only necessary for power saving modes for SATA/ethernet
-    # items which were only installed for NetworkManager
-    # avahi, polkit and wpa_supplicant are daemons so uninstalling them will
-    # also reduce memory usage
-    - jansson
-    - avahi-libs        # no need for service autodiscovery
-    - wpa_supplicant    # our servers don't have WLAN
+  yum:
+    name:
+      - tuned             # only necessary for power saving modes for SATA/ethernet
+      # items which were only installed for NetworkManager
+      # avahi, polkit and wpa_supplicant are daemons so uninstalling them will
+      # also reduce memory usage
+      - jansson
+      - avahi-libs        # no need for service autodiscovery
+      - wpa_supplicant    # our servers don't have WLAN
+    state: absent
 
 - include: borgbackup.yml
   when: borg_target is defined and borg_target
