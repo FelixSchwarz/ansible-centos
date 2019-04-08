@@ -41,12 +41,6 @@
     dest=/etc/rspamd/local.d/metrics.conf
     owner=rspamd mode=0644
 
-- name: add custom RBL configuration
-  copy: >
-    src=rspamd-rbl.conf
-    dest=/etc/rspamd/local.d/rbl.conf
-    owner=rspamd mode=0644
-
 - name: add custom user settings
   copy:
     src: rspamd-settings.map
