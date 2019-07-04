@@ -17,6 +17,13 @@ PasswordAuthentication yes
 # Change to no to disable s/key passwords
 ChallengeResponseAuthentication no
 
+# keep alive configuration to avoid timeout errors with "borg check"
+TCPKeepAlive yes
+# server should send a keep alive package to the client every 10 seconds
+ClientAliveInterval 10
+# terminate connection after 30 consecutive keepalives without a response
+ClientAliveCountMax 30
+
 # GSSAPI options
 GSSAPIAuthentication no
 GSSAPICleanupCredentials yes
