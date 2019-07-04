@@ -177,10 +177,10 @@
 
 - name: link to fullchain.pem
   file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/fullchain.pem dest=/etc/exim/tls/fullchain.pem state=link
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert|bool
 - name: link to privkey.pem
   file: src=/etc/letsencrypt/live/{{ hostname_letsencrypt }}/privkey.pem dest=/etc/exim/tls/privkey.pem state=link
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert|bool
 
 # force=yes because Exim generates these certificates on its first startup so
 # they might not exist so far.
@@ -201,11 +201,11 @@
 # /etc/letsencrypt/archive for exim which gives exim access to all certificates.
 - name: allow exim access to letsencrypt/archive
   file: path=/etc/letsencrypt/archive state=directory owner=root group=exim mode=0750
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert|bool
 
 - name: allow exim access to letsencrypt/live
   file: path=/etc/letsencrypt/live state=directory owner=root group=exim mode=0750
-  when: use_letsencrypt_cert
+  when: use_letsencrypt_cert|bool
 #` --- letsencrypt --------------------------------------------------------------
 
 
