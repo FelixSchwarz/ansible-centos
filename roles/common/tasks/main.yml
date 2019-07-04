@@ -37,6 +37,8 @@
 
 # explicitely setting a custom SSH key is useful for deployments and borg
 # backups
+# generate SSH key:
+#    $ ssh-keygen -N "" -t ecdsa -C root@<HOST> -f host_files/<HOST>/sshkey-root
 - name: check if custom ssh key for root exists
   local_action: stat path=host_files/{{ inventory_hostname }}/sshkey-root
   register: sshkey_root
