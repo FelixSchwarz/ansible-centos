@@ -54,13 +54,13 @@
     state: present
     key: "{{ borg_ssh_key }}"
   # when is important to prevent an exception in ansible's "authorized_key" module
-  when: borg_ssh_key
+  when: borg_ssh_key|bool
 
 #`--- SSH keys -----------------------------------------------------------------
 
 - include: borgrepo.yml
   with_items: "{{ borg_accounts }}"
   # "when" is important to filter "no accounts defined"
-  when: borg_accounts
+  when: borg_accounts|bool
 
 
