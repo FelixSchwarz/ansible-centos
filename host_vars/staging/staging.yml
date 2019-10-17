@@ -2,6 +2,8 @@
 
 hostname: staging.devnull.example
 
+eth_device: enp1s0
+
 # The following data is actually sensitive and should be stored in an encrypted
 # file (ansible vault). As this just an example configuration you can see the
 # data in clear text :-)

@@ -25,7 +25,9 @@
   file: path=/etc/systemd/network state=directory
 
 - name: configure networkd
-  copy: src=host_files/{{ inventory_hostname }}/10-eth0.network dest="/etc/systemd/network/10-{{ eth_device }}.network"
+  copy:
+    src:  "host_files/{{ inventory_hostname }}/10-{{ eth_device }}.network"
+    dest: /etc/systemd/network/
 
 - name: networkd configuration should match the correct interface
   lineinfile: >
