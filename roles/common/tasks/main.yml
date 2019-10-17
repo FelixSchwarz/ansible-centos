@@ -135,19 +135,24 @@
   tags: systemd-resolved
 
 
-# This removes a couple of services to save RAM (quite a bit, about 50 MB!)
+# Remove some CentOS 7 services to save RAM (quite a bit, about 50 MB!)
 # also less running services means reduced attack surface.
 - name: remove packages
   yum:
     name:
       - tuned             # only necessary for power saving modes for SATA/ethernet
       # items which were only installed for NetworkManager
-      # avahi, polkit and wpa_supplicant are daemons so uninstalling them will
+      # avahi and wpa_supplicant are daemons so uninstalling them will
       # also reduce memory usage
       - jansson
       - avahi-libs        # no need for service autodiscovery
       - wpa_supplicant    # our servers don't have WLAN
     state: absent
+  # CentOS 8 is different
+  #  - "avahi-libs" and "wpa_supplicant" are not installed by default anymore
+  #  - "jansson" is required for "firewalld"
+  #  - "tuned" is required for "hdparm"
+  when: is_centos7
 
 - include: borgbackup.yml
   when: borg_target is defined and borg_target
