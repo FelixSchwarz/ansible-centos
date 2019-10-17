@@ -41,8 +41,9 @@
       - cronie
     state: present
 
-- name: Disable CentOS extras
-  copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
+- name: disable "extras" repo for CentOS 7
+  copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
+  when: is_centos7
 
 # explicitely setting a custom SSH key is useful for deployments and borg
 # backups
