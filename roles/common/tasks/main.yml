@@ -1,6 +1,10 @@
 ---
 # This role contains common plays that will run on all nodes.
 
+- set_fact:
+    is_centos: "{{ ansible_distribution == 'CentOS' }}"
+    cacheable: yes
+
 - include: ssh_server.yml
   tags: sshd
 
