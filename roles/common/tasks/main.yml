@@ -116,6 +116,9 @@
 
 - include: etckeeper.yml
   tags: etckeeper
+  # etckeeper does not work in CentOS 8 because some output confuses ansible
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1762693
+  when: is_centos7
 
 - include: chrony.yml
 
