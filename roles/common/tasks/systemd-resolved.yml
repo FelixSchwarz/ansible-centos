@@ -4,6 +4,8 @@
   yum:
     name: systemd-resolved
     state: present
+  # in CentOS 8 "systemd-resolved" is provided by the "systemd" package itself
+  when: is_centos7
 
 - name: enable systemd-resolved
   service: name=systemd-resolved    state=started enabled=true
