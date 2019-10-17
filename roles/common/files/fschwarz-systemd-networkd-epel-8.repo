@@ -1,0 +1,10 @@
+[fschwarz-systemd-networkd]
+name=Copr repo for systemd-networkd owned by fschwarz
+baseurl=https://copr-be.cloud.fedoraproject.org/results/fschwarz/systemd-networkd/epel-8-$basearch/
+type=rpm-md
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/fschwarz/systemd-networkd/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+

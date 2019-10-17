@@ -8,6 +8,7 @@
 # need separate "set_fact" so we can use "is_centos"
 - set_fact:
     is_centos7: "{{ is_centos and (ansible_distribution_major_version == '7') }}"
+    is_centos8: "{{ is_centos and (ansible_distribution_major_version == '8') }}"
     cacheable: yes
 
 - include: ssh_server.yml
@@ -44,6 +45,14 @@
 - name: disable "extras" repo for CentOS 7
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
   when: is_centos7
+
+- name: disable "extras" repo for CentOS 8
+  lineinfile:
+      dest:   /etc/yum.repos.d/CentOS-Extras.repo
+      state:  present
+      regexp: "^\\s*enabled\\s*=\\s*"
+      line:   "enabled=0"
+  when: is_centos8
 
 # explicitely setting a custom SSH key is useful for deployments and borg
 # backups

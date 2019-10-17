@@ -1,5 +1,12 @@
 ---
 
+- name: enable copr repo for systemd-networkd
+  copy:
+    src: fschwarz-systemd-networkd-epel-8.repo
+    dest: /etc/yum.repos.d/CentOS-Base.repo
+  when: is_centos8
+
+
 # configure networking using systemd-networkd to the maximum extend
 # - utilities are pretty slim (saves quite a bit of RAM)
 # - utilities are *really* well integrated/handling a lot of edge cases
