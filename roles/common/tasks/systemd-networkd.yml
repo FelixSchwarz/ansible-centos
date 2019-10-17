@@ -54,6 +54,7 @@
   # the old service - "systemd-networkd" will take over after the next reboot.
   # (btw not using the old init script saves about 5-10 MB RAM)
   service: name=network    enabled=false
+  when: is_centos7
 
 - name: ensure that firewalld applies to eth device
   shell: /usr/bin/firewall-cmd --permanent --zone=public --add-interface={{ eth_device }}
