@@ -5,6 +5,11 @@
     is_centos: "{{ ansible_distribution == 'CentOS' }}"
     cacheable: yes
 
+# need separate "set_fact" so we can use "is_centos"
+- set_fact:
+    is_centos7: "{{ is_centos and (ansible_distribution_major_version == '7') }}"
+    cacheable: yes
+
 - include: ssh_server.yml
   tags: sshd
 
