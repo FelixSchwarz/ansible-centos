@@ -44,14 +44,15 @@ UsePAM yes
 X11Forwarding yes
 UsePrivilegeSeparation sandbox
 
+# It is recommended to use pam_motd in /etc/pam.d/sshd instead of PrintMotd,
+# as it is more configurable and versatile than the built-in version.
+PrintMotd no
+
 # Accept locale-related environment variables
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
 AcceptEnv XMODIFIERS
-
-# Accept rmate / Remote Atom so we can differentiate between MH and RB editors
-AcceptEnv RMATE_PORT
 
 # override default of no subsystems
 Subsystem sftp internal-sftp
