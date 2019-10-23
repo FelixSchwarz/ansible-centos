@@ -1,0 +1,66 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Logging
+SyslogFacility AUTHPRIV
+
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile      .ssh/authorized_keys
+
+PasswordAuthentication no
+PermitRootLogin without-password
+
+# Change to no to disable s/key passwords
+ChallengeResponseAuthentication no
+
+# keep alive configuration to avoid timeout errors with "borg check"
+TCPKeepAlive yes
+# server should send a keep alive package to the client every 10 seconds
+ClientAliveInterval 10
+# terminate connection after 30 consecutive keepalives without a response
+ClientAliveCountMax 30
+
+# GSSAPI options
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+# WARNING: 'UsePAM no' is not supported in Red Hat Enterprise Linux and may cause several
+# problems.
+UsePAM yes
+
+X11Forwarding yes
+UsePrivilegeSeparation sandbox
+
+# It is recommended to use pam_motd in /etc/pam.d/sshd instead of PrintMotd,
+# as it is more configurable and versatile than the built-in version.
+PrintMotd no
+
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+
+# override default of no subsystems
+Subsystem sftp internal-sftp
+
+Match Group sftponly
+    ChrootDirectory /srv/sftp/
+    ForceCommand internal-sftp -d /%u
+    X11Forwarding no
+    AllowTcpForwarding no
+# -d == initial directory, relative to chroot, %u == username
