@@ -122,6 +122,16 @@
 
 - include: chrony.yml
 
+- name: remove systemd-status-email.service
+  file:
+    path: /etc/systemd/system/systemd-status-email.service
+    state: absent
+  notify: reload systemd units
+
+- name: remove systemd-send-email script
+  file:
+    path: /usr/local/bin/systemd-send-email
+    state: absent
 
 - include: yum-cron.yml
   tags: yum-cron
