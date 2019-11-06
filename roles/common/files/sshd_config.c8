@@ -43,7 +43,6 @@ GSSAPICleanupCredentials yes
 UsePAM yes
 
 X11Forwarding yes
-UsePrivilegeSeparation sandbox
 
 # It is recommended to use pam_motd in /etc/pam.d/sshd instead of PrintMotd,
 # as it is more configurable and versatile than the built-in version.
