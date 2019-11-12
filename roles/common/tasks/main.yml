@@ -5,6 +5,10 @@
     is_centos: "{{ ansible_distribution == 'CentOS' }}"
     cacheable: yes
 
+- set_fact:
+    is_fedora: "{{ ansible_distribution == 'Fedora' }}"
+    cacheable: yes
+
 # need separate "set_fact" so we can use "is_centos"
 - set_fact:
     is_centos7: "{{ is_centos and (ansible_distribution_major_version == '7') }}"
@@ -37,6 +41,7 @@
       - firewalld
       - cronie
     state: present
+  when: is_centos
 
 - name: disable "extras" repo for CentOS 7
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
@@ -114,7 +119,7 @@
   tags: etckeeper
   # etckeeper does not work in CentOS 8 because some output confuses ansible
   # https://bugzilla.redhat.com/show_bug.cgi?id=1762693
-  when: is_centos7
+  when: is_centos7 or is_fedora
 
 - include: chrony.yml
 

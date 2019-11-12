@@ -20,6 +20,8 @@
   yum:
     name: systemd-networkd
     state: present
+  # Fedora ships "networkd" as part of the "systemd" package
+  when: is_centos7 or is_centos8
 
 - name: create /etc/systemd/network
   file: path=/etc/systemd/network state=directory
