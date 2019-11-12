@@ -1,0 +1,10 @@
+[fschwarz-etckeeper]
+name=Copr repo for etckeeper owned by fschwarz
+baseurl=https://copr-be.cloud.fedoraproject.org/results/fschwarz/etckeeper/epel-8-$basearch/
+type=rpm-md
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/fschwarz/etckeeper/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+
