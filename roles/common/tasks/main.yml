@@ -47,9 +47,9 @@
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
   when: is_centos7
 
-- name: disable "extras" repo for CentOS 8
+- name: disable "plus" repo for CentOS 8
   lineinfile:
-      dest:   /etc/yum.repos.d/CentOS-Extras.repo
+      dest:   /etc/yum.repos.d/CentOS-Plus.repo
       state:  present
       regexp: "^\\s*enabled\\s*=\\s*"
       line:   "enabled=0"
