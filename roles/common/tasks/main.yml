@@ -49,7 +49,7 @@
 
 - name: disable "plus" repo for CentOS 8
   lineinfile:
-      dest:   /etc/yum.repos.d/CentOS-Plus.repo
+      dest:   /etc/yum.repos.d/CentOS-centosplus.repo
       state:  present
       regexp: "^\\s*enabled\\s*=\\s*"
       line:   "enabled=0"
