@@ -1,0 +1,19 @@
+---
+
+- name: install dnf-automatic
+  yum:
+    name: dnf-automatic
+    state: present
+
+- name: generate dnf/automatic.conf
+  template:
+    src: dnf-automatic.conf.j2
+    dest: /etc/dnf/automatic.conf
+    mode: 0644
+
+- name: enable dnf-automatic.service
+  systemd:
+    name: dnf-automatic.service
+    state: started
+    enabled: true
+

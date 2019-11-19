@@ -149,8 +149,12 @@
 
 - include: yum-cron.yml
   tags: yum-cron
-  # no "yum-cron" in CentOS 8, need dnf-specific replacement
   when: is_centos7
+
+- include: dnf-automatic.yml
+  tags: dnf-automatic
+  when: is_centos8 or is_fedora
+
 
 - include: systemd-networkd.yml
   tags: systemd-networkd
