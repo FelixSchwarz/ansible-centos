@@ -116,20 +116,6 @@
     state: present
 
 
-# etckeeper does not work with dnf out of the box because some output confuses
-# ansible: https://bugzilla.redhat.com/show_bug.cgi?id=1762693
-- name: enable copr repo for etckeeper (Fedora)
-  copy:
-    src: fschwarz-etckeeper-fedora.repo
-    dest: /etc/yum.repos.d/
-  when: is_fedora
-
-- name: enable copr repo for etckeeper (EPEL)
-  copy:
-    src: fschwarz-etckeeper-epel-8.repo
-    dest: /etc/yum.repos.d/
-  when: is_centos8
-
 - include: etckeeper.yml
   tags: etckeeper
 
