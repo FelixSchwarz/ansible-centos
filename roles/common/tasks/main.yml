@@ -33,6 +33,10 @@
     policy: targeted
     state: "{{ selinux_mode }}"
 
+- name: Set timezone to Europe/Berlin
+  timezone:
+    name: Europe/Berlin
+
 - name: base packages
   yum:
     name:
