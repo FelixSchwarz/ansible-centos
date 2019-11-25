@@ -39,6 +39,10 @@
 # moved this out of "mariadb-set-root-password.sh" because .my.cnf is generated
 # after that script and mysqladmin will just use what we have generated in the
 # previous task.
+- name: restart mysql to ensure we can use the new root passwort
+  service: name=mariadb.service state=restarted
+  when: not mariadb_root_password_set.stat.exists
+
 - name: flush mysql privilege tables
   command: /usr/bin/mysqladmin flush-privileges
   when: not mariadb_root_password_set.stat.exists
