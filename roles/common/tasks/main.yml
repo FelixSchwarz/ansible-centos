@@ -51,6 +51,9 @@
       - cronie
     state: present
 
+- name: Start firewalld
+  service: name=firewalld state=started enabled=true
+
 - name: Start cron (cronie)
   service: name=cron state=started enabled=true
 
