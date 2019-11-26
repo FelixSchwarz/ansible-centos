@@ -54,8 +54,8 @@
 - name: Start firewalld
   service: name=firewalld state=started enabled=true
 
-- name: Start cron (cronie)
-  service: name=cron state=started enabled=true
+- name: Start crond (cronie)
+  service: name=crond.service state=started enabled=true
 
 - name: disable "extras" repo for CentOS 7
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
