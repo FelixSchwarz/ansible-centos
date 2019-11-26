@@ -37,15 +37,22 @@
   timezone:
     name: Europe/Berlin
 
-- name: base packages
+- name: enable EPEL repo
   yum:
     name:
       # epel-release is included in CentOS extras which is enabled by default
       - epel-release
+  when: is_centos
+
+- name: install base packages
+  yum:
+    name:
       - firewalld
       - cronie
     state: present
-  when: is_centos
+
+- name: Start cron (cronie)
+  service: name=cron state=started enabled=true
 
 - name: disable "extras" repo for CentOS 7
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
