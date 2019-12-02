@@ -1,3 +1,5 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+
 [fschwarz-etckeeper]
 name=Copr repo for etckeeper owned by fschwarz
 baseurl=https://copr-be.cloud.fedoraproject.org/results/fschwarz/etckeeper/epel-8-$basearch/

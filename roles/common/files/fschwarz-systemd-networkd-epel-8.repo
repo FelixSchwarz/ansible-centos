@@ -1,3 +1,5 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+
 [fschwarz-systemd-networkd]
 name=Copr repo for systemd-networkd owned by fschwarz
 baseurl=https://copr-be.cloud.fedoraproject.org/results/fschwarz/systemd-networkd/epel-8-$basearch/

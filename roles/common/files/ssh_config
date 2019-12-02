@@ -1,3 +1,4 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
 
 GlobalKnownHostsFile /etc/ssh/known_hosts
 
