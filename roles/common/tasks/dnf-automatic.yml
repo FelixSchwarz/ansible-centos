@@ -14,6 +14,14 @@
 - name: enable dnf-automatic.service
   systemd:
     name: dnf-automatic.service
+    # not adding "started" here because that triggers a "dnf update" right away
+    # (dnf-automatic is a "one shot" service).
+    # This service needs to be enabled so the .timer unit can do its thing.
+    enabled: true
+
+- name: enable dnf-automatic.timer
+  systemd:
+    name: dnf-automatic.timer
     state: started
     enabled: true
 
