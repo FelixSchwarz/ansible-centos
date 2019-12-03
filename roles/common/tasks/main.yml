@@ -132,7 +132,6 @@
 
 - include: etckeeper.yml
   tags: etckeeper
-  when: not is_fedora
 
 
 - include: chrony.yml

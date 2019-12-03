@@ -1,18 +1,19 @@
 ---
 
-# etckeeper does not work with dnf out of the box because some output confuses
-# ansible: https://bugzilla.redhat.com/show_bug.cgi?id=1762693
-- name: enable copr repo for etckeeper (Fedora)
-  copy:
-    src: fschwarz-etckeeper-fedora.repo
-    dest: /etc/yum.repos.d/
-  when: is_fedora
+# Since 2019-12-03 Fedora+EPEL ship etckeeper 1.18.12 with custom patches
+# so there is no need for a custom COPR anymore.
+#   https://bodhi.fedoraproject.org/updates/FEDORA-EPEL-2019-d4bfeee795
+#   https://bodhi.fedoraproject.org/updates/FEDORA-2019-091f76387e
+#   https://bugzilla.redhat.com/show_bug.cgi?id=1762693
+- name: remove etckeeper copr repo (Fedora)
+  file:
+    path: /etc/yum.repos.d/fschwarz-etckeeper-fedora.repo
+    state: absent
 
-- name: enable copr repo for etckeeper (EPEL)
-  copy:
-    src: fschwarz-etckeeper-epel-8.repo
-    dest: /etc/yum.repos.d/
-  when: is_centos8
+- name: remove etckeeper copr repo (EPEL 8)
+  file:
+    path: fschwarz-etckeeper-epel-8.repo
+    state: absent
 
 
 - name: install etckeeper
