@@ -12,7 +12,7 @@
 
 - name: remove etckeeper copr repo (EPEL 8)
   file:
-    path: fschwarz-etckeeper-epel-8.repo
+    path: /etc/yum.repos.d/fschwarz-etckeeper-epel-8.repo
     state: absent
 
 
