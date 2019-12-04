@@ -2,10 +2,10 @@
 # This role contains plays for hosts using Exim as relay (sending emails via
 # dedicated mail server/"smart host")
 
-- name: enable copr repo for exim in epel8
-  copy:
-    src: fschwarz-exim-epel8.repo
-    dest: /etc/yum.repos.d/
+- name: remove exim copr repo (EPEL 8)
+  file:
+    path: /etc/yum.repos.d/fschwarz-exim-epel8.repo
+    state: absent
   when: is_centos8
 
 
