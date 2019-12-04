@@ -7,7 +7,20 @@
       - postgresql-server
       # required for ansible's "postgresql_db" module
       - python3-psycopg2
+      # required for "ident" authentication
+      - oidentd
     state: present
+
+- name: copy oidentd sysconfig
+  copy:
+    src: sysconfig-oidentd.conf
+    dest: /etc/sysconfig/oidentd
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable oidentd server
+  service: name=oidentd state=started enabled=true
 
 - name: check if postgres is initialized already
   stat: path=/var/lib/pgsql/data/base
