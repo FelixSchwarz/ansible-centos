@@ -5,6 +5,8 @@
     name:
       - postgresql
       - postgresql-server
+      # required for ansible's "postgresql_db" module
+      - python3-psycopg2
     state: present
 
 - name: check if postgres is initialized already
