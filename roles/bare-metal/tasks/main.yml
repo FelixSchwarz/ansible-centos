@@ -38,14 +38,13 @@
 
 
 - name: check if lvm is installed
-  command: /usr/bin/rpm --quiet -q lvm2
+  yum:
+    list=lvm2
   register: lvm_installed
-  # do not abort ansible processing if rpm exists with non-zero exit code
-  failed_when: "lvm_installed.rc not in (0, 1)"
 
 - name: enable trim for lvm
   lineinfile: dest=/etc/lvm/lvm.conf line="\1issue_discards = 1" regexp="^(\s*)issue_discards\s*=\s*" backrefs=yes
-  when: lvm_installed.rc == 0
+  when: lvm_installed.results[0].yumstate == 'installed'
 
 - name: enable period fstrim timer
   systemd: name=fstrim.timer state=started enabled=True
