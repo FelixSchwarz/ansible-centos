@@ -60,7 +60,4 @@
 
 - include: borgrepo.yml
   with_items: "{{ borg_accounts }}"
-  # "when" is important to filter "no accounts defined"
-  when: borg_accounts|bool
-
 
