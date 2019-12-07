@@ -8,8 +8,8 @@
 #     - domain
 # (assumes nginx has user nginx/group nginx)
 
-- set_fact: vhost_username={{ item.user }}
-- set_fact: vhost_domain={{ item.domain }}
+- set_fact: vhost_username="{{ item.user }}"
+- set_fact: vhost_domain="{{ item.domain }}"
 
 - name: setup vhost filesystem for {{ vhost_username }}/{{ vhost_domain }}
   include: roles/nginx/tasks/nginx-vhost-filesystem.yml
