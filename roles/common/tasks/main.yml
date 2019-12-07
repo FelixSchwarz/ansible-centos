@@ -44,6 +44,13 @@
       - epel-release
   when: is_centos
 
+- name: stop installing weak dependencies (EPEL 8/Fedora)
+  lineinfile:
+    path: /etc/dnf/dnf.conf
+    regexp: '^install_weak_deps='
+    line: 'install_weak_deps=False'
+  when: is_fedora or is_centos8
+
 - name: install base packages
   yum:
     name:
