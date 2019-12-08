@@ -31,6 +31,7 @@
     state=directory
     owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
     mode=0755
+    setype=httpd_sys_content_t
 
 - name: create directory "logs"
   file: >
