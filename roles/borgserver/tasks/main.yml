@@ -5,6 +5,41 @@
     name: borgbackup
     state: present
 
+# --- create "borg" user and set up authorized_keys ----------------------------
+- user:
+    name: borg
+    state: present
+    shell: /bin/bash
+    createhome: yes
+
+- file:
+    path: "~borg/.ssh"
+    state: directory
+    owner: borg
+    group: borg
+    mode: 0700
+    setype: ssh_home_t
+
+- name: add borg "master" keys
+  authorized_key:
+    user: borg
+    state: present
+    key: "{{ borg_ssh_key }}"
+  # when is important to prevent an exception in ansible's "authorized_key" module
+  when: borg_ssh_key|bool
+
+# ansible's "authorized_key" module did not create files with the correct
+# SELinux type (ansible 2.9.1 / Dec 2019).
+- name: ensure correct SELinux type for .ssh/authorized_keys
+  file:
+    path: "~borg/.ssh/authorized_keys"
+    setype: ssh_home_t
+  # ".ssh/authorized_keys" was only created in the last step if "borg_ssh_key"
+  # is set.
+  when: borg_ssh_key|bool
+# ------------------------------------------------------------------------------
+
+
 - file: >
     path={{ borg_repo_basedir }}
     state=directory
