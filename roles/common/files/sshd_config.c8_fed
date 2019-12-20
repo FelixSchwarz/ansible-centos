@@ -38,7 +38,7 @@ GSSAPICleanupCredentials yes
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-# WARNING: 'UsePAM no' is not supported in Red Hat Enterprise Linux and may cause several
+# WARNING: 'UsePAM no' is not supported in (Fedora/Red Hat Enterprise Linux) and may cause several
 # problems.
 UsePAM yes
 
