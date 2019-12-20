@@ -64,6 +64,14 @@
 - name: Start crond (cronie)
   service: name=crond.service state=started enabled=true
 
+- name: install SELinux support libraries on CentOS 8+Fedora
+  yum:
+    name:
+      # required to manage SELinux policy with ansible
+      - python3-libsemanage
+    state: present
+  when: is_centos8 or is_fedora
+
 - name: disable "extras" repo for CentOS 7
   copy: src=CentOS-Base.el7.repo dest=/etc/yum.repos.d/CentOS-Base.repo
   when: is_centos7
