@@ -13,6 +13,12 @@
       - logrotate
     state: present
 
+- name: allow nginx to initiate network connections (HTTP reverse proxy, OCSP stapling)
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
 - name: create nginx/vhosts.d
   # mode=0751 -- users are able to read their nginx vhost file but can not see which other domains are present
   file: state=directory dest=/etc/nginx/vhosts.d owner=root mode=0751
