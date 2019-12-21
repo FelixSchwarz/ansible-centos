@@ -3,10 +3,10 @@
 - set_fact: hostname_letsencrypt={{ letsencrypt_host_domains | first }}
   when: use_letsencrypt_cert and letsencrypt_host_domains
 
-- name: enable copr repo for certbot (EPEL 8)
-  copy:
-    src: fschwarz-certbot-epel8.repo
-    dest: /etc/yum.repos.d/
+- name: remove copr repo for certbot (EPEL 8)
+  file:
+    path: /etc/yum.repos.d/fschwarz-certbot-epel8.repo
+    state: absent
   when: is_centos8
 
 - name: install certbot package
