@@ -26,7 +26,7 @@
     state: present
     key: "{{ borg_ssh_key }}"
   # when is important to prevent an exception in ansible's "authorized_key" module
-  when: borg_ssh_key|bool
+  when: borg_ssh_key | length > 0
 
 # ansible's "authorized_key" module did not create files with the correct
 # SELinux type (ansible 2.9.1 / Dec 2019).
