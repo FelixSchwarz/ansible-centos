@@ -84,10 +84,11 @@
       line:   "enabled=0"
   when: is_centos8
 
-# quite a few EPEL packages are not yet available in the "stable" repo so we
-# need to enable "epel-testing" for now
-- name: enable "epel-testing" repo for CentOS 8
-  copy: src=epel-testing.el8.repo dest=/etc/yum.repos.d/epel-testing.repo
+# no need to install stuff from testing anymore
+- name: remove "epel-testing" repo for CentOS 8
+  file:
+    path: /etc/yum.repos.d/epel-testing.repo
+    state: absent
   when: is_centos8
 
 # explicitely setting a custom SSH key is useful for deployments and borg
