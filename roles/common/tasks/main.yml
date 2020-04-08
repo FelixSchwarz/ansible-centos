@@ -198,6 +198,20 @@
   #  - "tuned" is required for "hdparm"
   when: is_centos7
 
+# prevent the avahi daemon from running even if it must be present for some
+# installations
+- name: Check if avahi is installed
+  stat: path=/usr/lib/systemd/system/avahi-daemon.service
+  register: avahi_service_file
+
+# no need for autodiscovery, less RAM usage, less security holes
+- name: ensure avahi-daemon is not running
+  service:
+    name: avahi-daemon
+    state: stopped
+    enabled: false
+ when: avahi_service_file.stat.exists
+
 - include: borgbackup.yml
   when: borg_target is defined and borg_target
 
