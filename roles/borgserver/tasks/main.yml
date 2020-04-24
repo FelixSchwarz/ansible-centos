@@ -47,7 +47,6 @@
     owner:  root
     group:  root
     mode:   0755
-    setype: home_root_t
 
 - include: borgrepo.yml
   with_items: "{{ borg_accounts }}"
