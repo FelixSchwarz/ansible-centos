@@ -48,6 +48,12 @@
     group:  root
     mode:   0755
 
+- name: allow access to user directories for "borg" master user by default
+  acl:
+    path:  "{{ borg_repo_basedir }}"
+    entry: default:user:borg:r-x
+    state: present
+
 - include: borgrepo.yml
   with_items: "{{ borg_accounts }}"
 
