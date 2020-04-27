@@ -57,7 +57,7 @@
 
 - name: set scores for rspamd neural net
   copy:
-    src:   rspamd-neural_group
+    src:   rspamd-neural_group.conf
     dest:  /etc/rspamd/local.d/neural_group
     owner: rspamd
     mode:  0640
