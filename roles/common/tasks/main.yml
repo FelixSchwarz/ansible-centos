@@ -210,7 +210,7 @@
     name: avahi-daemon
     state: stopped
     enabled: false
- when: avahi_service_file.stat.exists
+  when: avahi_service_file.stat.exists
 
 - include: borgbackup.yml
   when: borg_target is defined and borg_target
