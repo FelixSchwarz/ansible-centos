@@ -24,38 +24,74 @@
   when: rspamd_worker_controller_file.stat.exists
 
 
+- name: add redis configuration for rspamd
+  copy:
+    src:   rspamd-redis.conf
+    dest:  /etc/rspamd/local.d/redis.conf
+    owner: rspamd
+    mode:  0640
+
+- name: set reject/greylisting thresholds for rspamd
+  copy:
+    src:   rspamd-actions.conf
+    dest:  /etc/rspamd/local.d/actions.conf
+    owner: rspamd
+    mode:  0640
+
 # Using "0" as threshold for BAYES_HAM autolearning seems to be a bit too
 # naive as a message with a good mime structure and no negative identifiers will
 # have -0.3.
-- name: add custom settings for bayes autolearning
-  copy: >
-    src=rspamd-statistic.conf
-    dest=/etc/rspamd/local.d/statistic.conf
-    owner=rspamd mode=0644
-
-# specify a higher threshold for "reject" and possibly also modify scores
-# for some rules.
-- name: add custom thresholds for reject
-  copy: >
-    src=rspamd-metrics.conf
-    dest=/etc/rspamd/local.d/metrics.conf
-    owner=rspamd mode=0644
-
-- name: add custom user settings
+- name: set bayes autolearn thresholds for rspamd
   copy:
-    src: rspamd-settings.map
-    dest: /etc/rspamd/local.d/settings.map
+    src:   rspamd-classifier-bayes.conf
+    dest:  /etc/rspamd/local.d/classifier-bayes.conf
     owner: rspamd
-    group: rspamd
-    mode: 0640
+    mode:  0640
 
-- name: copy rspamd.conf.local
+- name: enable rspamd neural net
   copy:
-    src: rspamd.conf.local
-    dest: /etc/rspamd/rspamd.conf.local
+    src:   rspamd-neural.conf
+    dest:  /etc/rspamd/local.d/neural.conf
     owner: rspamd
-    group: rspamd
-    mode: 0640
+    mode:  0640
+
+- name: set scores for rspamd neural net
+  copy:
+    src:   rspamd-neural_group
+    dest:  /etc/rspamd/local.d/neural_group
+    owner: rspamd
+    mode:  0640
+
+- name: set custom score for RDNS_NONE in rspamd
+  copy:
+    src:   rspamd-headers_group.conf
+    dest:  /etc/rspamd/local.d/headers_group.conf
+    owner: rspamd
+    mode:  0640
+
+- name: enable reputation module in rspamd
+  copy:
+    src:   rspamd-reputation.conf
+    dest:  /etc/rspamd/local.d/reputation.conf
+    owner: rspamd
+    mode:  0640
+
+- name: disable spam filtering for postmaster
+  copy:
+    src:   rspamd-settings.conf
+    dest:  /etc/rspamd/local.d/settings.conf
+    owner: rspamd
+    mode:  0640
+
+- name: remove config files for rspamd 1.9.x
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/rspamd/local.d/metrics.conf
+    - /etc/rspamd/local.d/statistic.conf
+    - /etc/rspamd/local.d/settings.map
+    - /etc/rspamd/rspamd.conf.local
 
 - name: enable rspamd.service
   service: name=rspamd.service enabled=true state=started
