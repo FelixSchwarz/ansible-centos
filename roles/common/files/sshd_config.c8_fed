@@ -25,6 +25,11 @@ ClientAliveInterval 10
 # terminate connection after 30 consecutive keepalives without a response
 ClientAliveCountMax 30
 
+# disabling DNS can speed up SSH logins (avoid reverse lookups) and
+# seems to have little downsides:
+#   https://unix.stackexchange.com/a/56947/42237
+UseDNS no
+
 # GSSAPI options
 GSSAPIAuthentication yes
 GSSAPICleanupCredentials yes
