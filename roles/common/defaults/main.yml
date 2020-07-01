@@ -15,3 +15,4 @@ selinux_mode: disabled
 # valid values: "yes" / "no"
 system_auto_updates: "yes"
 
+sshguard: True

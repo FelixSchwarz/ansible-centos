@@ -1,0 +1,23 @@
+---
+
+- name: install sshguard
+  yum:
+    name: sshguard
+    state: present
+
+- name: copy etc/sshguard.conf
+  copy:
+    src: sshguard.conf
+    dest: /etc/sshguard.conf
+
+- name: copy etc/sshguard.whitelist
+  copy:
+    src: sshguard.whitelist
+    dest: /etc/sshguard.whitelist
+
+- name: Start sshguard
+  service:
+    name: sshguard
+    state: started
+    enabled: true
+
