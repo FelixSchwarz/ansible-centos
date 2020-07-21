@@ -15,6 +15,17 @@
     src: sshguard.whitelist
     dest: /etc/sshguard.whitelist
 
+- name: create override directory for sshguard
+  file:
+    path: /etc/systemd/system/sshguard.service.d
+    state: directory
+    mode: '0755'
+
+- name: ensure SSHGuard starts only after name resolution is set up
+  copy:
+    src: sshguard-override.conf
+    dest: /etc/systemd/system/sshguard.service.d/override.conf
+
 - name: Start sshguard
   service:
     name: sshguard
