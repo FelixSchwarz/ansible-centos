@@ -56,7 +56,17 @@
     name:
       - firewalld
       - cronie
+      # required for Ansible's SELinux support (using Python 2)
+      - policycoreutils
     state: present
+
+- name: install Python 3 modules for SELinux (Fedora)
+  yum:
+    name:
+      - python3-policycoreutils
+      - python3-libselinux
+    state: present
+  when: is_fedora
 
 - name: Start firewalld
   service: name=firewalld state=started enabled=true
