@@ -25,13 +25,24 @@
     owner="{{ vhost_username }}" group=nginx
     mode=0750
 
+- name: set persistent selinux context for "html"
+  sefcontext:
+    target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/html(/.*)?"
+    setype: httpd_sys_content_t
+    state: present
+
 - name: create directory "html"
   file: >
     path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/html
     state=directory
     owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
     mode=0755
-    setype=httpd_sys_content_t
+
+- name: set persistent selinux context for logs
+  sefcontext:
+    target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/logs(/.*)?"
+    setype: httpd_log_t
+    state: present
 
 - name: create directory "logs"
   file: >
@@ -40,12 +51,24 @@
     owner=nginx group="{{ vhost_usergroup }}"
     mode=0750
 
+- name: set persistent selinux context for "shareddata"
+  sefcontext:
+    target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/shareddata(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
+
 - name: create directory "shareddata"
   file: >
     path=/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/shareddata
     state=directory
     owner="{{ vhost_username }}" group="{{ vhost_usergroup }}"
     mode=0755
+
+- name: set persistent selinux context for "userdata"
+  sefcontext:
+    target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/userdata(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
 
 - name: create directory "userdata"
   file: >
