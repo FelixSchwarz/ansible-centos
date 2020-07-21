@@ -40,6 +40,12 @@
 
 
 # ,--- prepare webroot-based authentication ------------------------------------
+- name: setup SELinux contexts for /srv/letsencrypt
+  sefcontext:
+    target: "/srv/letsencrypt(/.*)?"
+    setype: httpd_var_lib_t
+    state: present
+
 - name: create /srv/letsencrypt
   file: path=/srv/letsencrypt state=directory mode=0755
 
