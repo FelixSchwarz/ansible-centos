@@ -20,6 +20,12 @@
     mode: 0700
     setype: ssh_home_t
 
+- name: set persistent selinux context for "~borg/.ssh"
+  sefcontext:
+    target: "~borg/.ssh(/.*)?"
+    setype: ssh_home_t
+    state: present
+
 - name: add borg "master" keys
   authorized_key:
     user: borg

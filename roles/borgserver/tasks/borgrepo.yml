@@ -23,6 +23,12 @@
     mode: 0700
     setype: ssh_home_t
 
+- name: set persistent selinux context for ".ssh"
+  sefcontext:
+    target: "{{ borg_user_homedir }}/.ssh(/.*)?"
+    setype: ssh_home_t
+    state: present
+
 - name: Set authorized key for {{ borg_unix_user }}
   authorized_key:
     user: "{{ borg_unix_user }}"
