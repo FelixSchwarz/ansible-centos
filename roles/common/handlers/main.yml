@@ -2,7 +2,9 @@
 # Handlers for common notifications
 
 - name: restart sshd
-  service: name=sshd state=reloaded
+  systemd:
+    name:  sshd
+    state: reloaded
 
 - name: reload firewalld rules
   command: firewall-cmd --reload

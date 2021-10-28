@@ -46,7 +46,10 @@
     state: absent
 
 - name: enable systemd-networkd
-  service: name=systemd-networkd    state=started enabled=true
+  systemd:
+    name: systemd-networkd
+    state: started
+    enabled: true
 
 - name: enable systemd-networkd-wait-online
   service: name=systemd-networkd-wait-online    state=started enabled=true
