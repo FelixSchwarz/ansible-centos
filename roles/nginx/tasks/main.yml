@@ -18,7 +18,7 @@
     name: httpd_can_network_connect
     state: yes
     persistent: yes
-  when: ansible_selinux != False
+  when: ansible_selinux.status != 'disabled'
 
 - name: create nginx/vhosts.d
   # mode=0751 -- users are able to read their nginx vhost file but can not see which other domains are present

@@ -30,6 +30,7 @@
     target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/html(/.*)?"
     setype: httpd_sys_content_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: create directory "html"
   file: >
@@ -43,6 +44,7 @@
     target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/logs(/.*)?"
     setype: httpd_log_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: create directory "logs"
   file: >
@@ -56,6 +58,7 @@
     target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/shareddata(/.*)?"
     setype: httpd_sys_rw_content_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: create directory "shareddata"
   file: >
@@ -69,6 +72,7 @@
     target: "/srv/vhosts/{{ vhost_username }}/{{ vhost_domain }}/userdata(/.*)?"
     setype: httpd_sys_rw_content_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: create directory "userdata"
   file: >

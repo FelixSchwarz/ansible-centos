@@ -28,6 +28,7 @@
     target: "{{ borg_user_homedir }}/.ssh(/.*)?"
     setype: ssh_home_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: Set authorized key for {{ borg_unix_user }}
   authorized_key:

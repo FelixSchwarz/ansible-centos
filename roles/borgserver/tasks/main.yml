@@ -25,6 +25,7 @@
     target: "~borg/.ssh(/.*)?"
     setype: ssh_home_t
     state: present
+  when: ansible_selinux.status != 'disabled'
 
 - name: add borg "master" keys
   authorized_key:
