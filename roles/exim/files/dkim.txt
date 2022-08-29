@@ -1,0 +1,4 @@
+# This file is managed by Ansible. Don't make changes here, they will be overwritten.
+#
+# expected format:
+# <domain>: <dkim selector>
